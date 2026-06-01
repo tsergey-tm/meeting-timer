@@ -76,19 +76,35 @@ const TimerScreen = () => {
                                         {format(new Date(), 'HH:mm:ss')}
                                     </div>
                                 </div>
-                                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                                <div className={"text-center p-4 rounded-lg " + (
+                                    stageRemaining < 1 ? 'bg-red-50' :
+                                        stageRemaining < 61 ? 'bg-yellow-50' :
+                                            'bg-blue-50'
+                                )}>
                                     <div className="text-sm text-gray-600 mb-2">
                                         {state.meetingStatus === 'not_started' ? 'Time until meeting starts' : 'Time until next stage'}
                                     </div>
-                                    <div className="text-2xl font-bold text-blue-700">
+                                    <div className={"text-2xl font-bold " + (
+                                        stageRemaining < 1 ? 'text-red-700' :
+                                            stageRemaining < 61 ? 'text-yellow-500' :
+                                                'text-blue-700'
+                                    )}>
                                         {formatTime(stageRemaining)}
                                     </div>
                                 </div>
-                                <div className="text-center p-4 bg-green-50 rounded-lg">
+                                <div className={"text-center p-4 rounded-lg " + (
+                                    totalRemaining < 1 ? 'bg-red-50' :
+                                        totalRemaining < 61 ? 'bg-yellow-50' :
+                                            'bg-green-50'
+                                )}>
                                     <div className="text-sm text-gray-600 mb-2">
                                         Time until meeting end
                                     </div>
-                                    <div className="text-2xl font-bold text-green-700">
+                                    <div className={"text-2xl font-bold " + (
+                                        totalRemaining < 1 ? 'text-red-700' :
+                                            totalRemaining < 61 ? 'text-yellow-500' :
+                                                'text-green-700'
+                                    )}>
                                         {formatTime(totalRemaining)}
                                     </div>
                                 </div>
