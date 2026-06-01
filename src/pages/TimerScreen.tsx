@@ -78,7 +78,7 @@ const TimerScreen = () => {
                                 </div>
                                 <div className="text-center p-4 bg-blue-50 rounded-lg">
                                     <div className="text-sm text-gray-600 mb-2">
-                                        {state.meetingStatus === 'not_started' ? 'Time until meeting starts' : 'Time until next stage planned time'}
+                                        {state.meetingStatus === 'not_started' ? 'Time until meeting starts' : 'Time until next stage'}
                                     </div>
                                     <div className="text-2xl font-bold text-blue-700">
                                         {formatTime(stageRemaining)}

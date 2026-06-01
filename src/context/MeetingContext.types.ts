@@ -181,11 +181,13 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
             return calculateDisplayedStageTimes(state);
         }
 
-        case 'RESET_STATE':
-            return {
+        case 'RESET_STATE': {
+            console.log('RESET_STATE');
+            return calculateDisplayedStageTimes({
                 ...action.payload,
-                stages: calculatePlannedStageTimes(action.payload.stages, state.startTime || now)
-            };
+                stages: calculatePlannedStageTimes(action.payload.stages, action.payload.startTime || now)
+            });
+        }
 
         default:
             return state
