@@ -1,10 +1,130 @@
-import {type ReactNode, useReducer} from 'react'
-import {differenceInMinutes, isBefore} from 'date-fns'
+import {type ReactNode, useEffect, useReducer, useRef} from 'react'
+import {differenceInMinutes, format, isBefore} from 'date-fns'
 import {type Stage} from '../utils/stageUtils'
 import {initialState, MeetingContext, reducer} from "./MeetingContext.types.ts";
 
 export const MeetingProvider = ({children}: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
+    const hasRestoredFromUrl = useRef(false)
+
+    // Restore state from URL on initial load
+    useEffect(() => {
+        const restoreFromUrl = () => {
+            // Only restore once and only if we're in the initial state
+            if (hasRestoredFromUrl.current || state.startTime !== null || state.endTime !== null || state.stages.length > 0) {
+                return
+            }
+
+            const hash = window.location.hash
+            if (!hash || !hash.startsWith('#?')) return
+
+            try {
+                const urlParams = new URLSearchParams(hash.substring(2)) // Remove '#?'
+                const startTimeStr = urlParams.get('s')
+                const endTimeStr = urlParams.get('e')
+
+                if (!startTimeStr || !endTimeStr) return
+
+                // Parse time strings in HH:mm format and create Date objects for today
+                const [startHours, startMinutes] = startTimeStr.split(':').map(Number)
+                const [endHours, endMinutes] = endTimeStr.split(':').map(Number)
+
+                if (isNaN(startHours) || isNaN(startMinutes) || isNaN(endHours) || isNaN(endMinutes)) {
+                    return
+                }
+
+                const today = new Date()
+                const startTime = new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate(),
+                    startHours,
+                    startMinutes
+                )
+                const endTime = new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate(),
+                    endHours,
+                    endMinutes
+                )
+
+                if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) return
+
+                // If end time is before start time, assume it's on the next day
+                if (isBefore(endTime, startTime)) {
+                    endTime.setDate(endTime.getDate() + 1)
+                }
+
+                // Parse stages from n and d parameters
+                const stages: Stage[] = []
+                let index = 0
+                while (true) {
+                    const nameParam = `n${index}`
+                    const durationParam = `d${index}`
+
+                    const nameValue = urlParams.get(nameParam)
+                    const durationValue = urlParams.get(durationParam)
+
+                    if (nameValue === null || durationValue === null) {
+                        break // No more stages
+                    }
+
+                    const duration = parseInt(durationValue)
+                    if (!isNaN(duration) && duration > 0) {
+                        stages.push({
+                            name: decodeURIComponent(nameValue),
+                            duration: duration,
+                            plannedStartTime: null,
+                            actualStartTime: null,
+                            actualEndTime: null,
+                            displayedStartTime: null
+                        })
+                    }
+
+                    index++
+                }
+
+                if (stages.length > 0) {
+                    dispatch({type: 'SET_START_TIME', payload: startTime})
+                    dispatch({type: 'SET_END_TIME', payload: endTime})
+
+                    stages.forEach(stage => {
+                        dispatch({type: 'ADD_STAGE', payload: stage})
+                    })
+                }
+
+                // Mark that we've restored from URL
+                hasRestoredFromUrl.current = true
+            } catch {
+                // Ignore malformed URL fragments
+                hasRestoredFromUrl.current = true
+            }
+        }
+
+        restoreFromUrl()
+    }, [state])
+
+    // Save state to URL when state changes
+    useEffect(() => {
+        const saveToUrl = () => {
+            if (!state.startTime || !state.endTime) return
+
+            const params = new URLSearchParams()
+            params.set('s', format(state.startTime, 'HH:mm'))
+            params.set('e', format(state.endTime, 'HH:mm'))
+
+            // Save stages as individual n and d parameters for shorter URLs
+            state.stages.forEach((stage, index) => {
+                params.set(`n${index}`, encodeURIComponent(stage.name))
+                params.set(`d${index}`, stage.duration.toString())
+            })
+
+            window.history.replaceState(null, '', `#?${params.toString()}`)
+        }
+
+        saveToUrl()
+    }, [state.startTime, state.endTime, state.stages, state.currentStageIndex, state.meetingStatus])
 
     const calculateTimeRemaining = () => {
         if (!state.startTime || !state.endTime) {

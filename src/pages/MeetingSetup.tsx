@@ -253,12 +253,6 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                 </ul>
                             </div>
                         )}
-                        <button
-                            onClick={onClose}
-                            className="mt-4 px-4 py-2 text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-md transition-colors"
-                        >
-                            Cancel
-                        </button>
                     </div>
                 </div>
             </div>
