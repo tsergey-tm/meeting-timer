@@ -8,4 +8,8 @@ export default defineConfig({
         react(),
         tailwindcss()
     ],
+    base: '/meeting-timer/',
+    build: {
+        outDir: 'build',
+    },
 })
