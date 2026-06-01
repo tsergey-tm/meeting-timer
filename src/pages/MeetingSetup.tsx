@@ -16,6 +16,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
     const [newStageDuration, setNewStageDuration] = useState('')
     const [editingStageIndex, setEditingStageIndex] = useState<number | null>(null)
     const [editDuration, setEditDuration] = useState('')
+    const [editName, setEditName] = useState('')
 
     const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
@@ -68,10 +69,11 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
         if (isNaN(newDuration) || newDuration <= 0) return
         dispatch({
             type: 'UPDATE_STAGE',
-            payload: {index: stageIndex, duration: newDuration}
+            payload: {index: stageIndex, duration: newDuration, ...(editName.trim() !== '' && {name: editName.trim()})}
         })
         setEditingStageIndex(null)
         setEditDuration('')
+        setEditName('')
     }
 
     const handleRemoveStage = (stageIndex: number) => {
@@ -82,9 +84,10 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
         }
     }
 
-    const handleStartEditing = (stageIndex: number, currentDuration: number) => {
+    const handleStartEditing = (stageIndex: number, currentDuration: number, currentName: string) => {
         setEditingStageIndex(stageIndex)
         setEditDuration(currentDuration.toString())
+        setEditName(currentName)
     }
 
     const {isValid, errors} = validateMeeting()
@@ -156,10 +159,16 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                         {editingStageIndex === index ? (
                                             <div className="flex items-center space-x-2">
                                                 <input
+                                                    type="text"
+                                                    value={editName}
+                                                    onChange={(e) => setEditName(e.target.value)}
+                                                    className="w-28 px-2 py-1 border border-gray-300 rounded text-sm"
+                                                />
+                                                <input
                                                     type="number"
                                                     value={editDuration}
                                                     onChange={(e) => setEditDuration(e.target.value)}
-                                                    className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                                                    className="w-16 px-2 py-1 border border-gray-300 rounded text-sm"
                                                     min="1"
                                                 />
                                                 <button
@@ -180,9 +189,9 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                         ) : (
                                             <div className="flex items-center space-x-2">
                                                 <button
-                                                    onClick={() => handleStartEditing(index, stage.duration)}
+                                                    onClick={() => handleStartEditing(index, stage.duration, stage.name)}
                                                     className="p-1 text-blue-600 hover:text-blue-800"
-                                                    aria-label="Edit stage duration"
+                                                    aria-label="Edit stage"
                                                 >
                                                     <Pencil2Icon className="h-4 w-4"/>
                                                 </button>

@@ -14,8 +14,9 @@ export type Action =
     | { type: 'SET_START_TIME'; payload: Date }
     | { type: 'SET_END_TIME'; payload: Date }
     | { type: 'ADD_STAGE'; payload: Stage }
-    | { type: 'UPDATE_STAGE'; payload: { index: number; duration: number } }
+    | { type: 'UPDATE_STAGE'; payload: { index: number; duration: number; name?: string } }
     | { type: 'REMOVE_STAGE'; payload: number }
+    | { type: 'RESET_STATE'; payload: MeetingState }
     | { type: 'MARK_STAGE_COMPLETED'; payload: number }
     | { type: 'START_MEETING' }
     | { type: 'UPDATE_STAGES_DISPLAYED_TIMES'; payload: Stage[] }
@@ -126,7 +127,8 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
             const updatedStages = [...state.stages];
             updatedStages[action.payload.index] = {
                 ...updatedStages[action.payload.index],
-                duration: action.payload.duration
+                duration: action.payload.duration,
+                ...(action.payload.name !== undefined && {name: action.payload.name})
             };
 
             const finalStages = calculatePlannedStageTimes(updatedStages, state.startTime || now)
@@ -178,6 +180,12 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
         case 'UPDATE_STAGES_DISPLAYED_TIMES': {
             return calculateDisplayedStageTimes(state);
         }
+
+        case 'RESET_STATE':
+            return {
+                ...action.payload,
+                stages: calculatePlannedStageTimes(action.payload.stages, state.startTime || now)
+            };
 
         default:
             return state

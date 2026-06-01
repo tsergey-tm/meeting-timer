@@ -1,7 +1,7 @@
 import {type ReactNode, useEffect, useReducer, useRef} from 'react'
 import {differenceInMinutes, format, isBefore} from 'date-fns'
 import {type Stage} from '../utils/stageUtils'
-import {initialState, MeetingContext, reducer} from "./MeetingContext.types.ts";
+import {initialState, MeetingContext, type MeetingState, reducer} from "./MeetingContext.types.ts";
 
 export const MeetingProvider = ({children}: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -10,11 +10,6 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
     // Restore state from URL on initial load
     useEffect(() => {
         const restoreFromUrl = () => {
-            // Only restore once and only if we're in the initial state
-            if (hasRestoredFromUrl.current || state.startTime !== null || state.endTime !== null || state.stages.length > 0) {
-                return
-            }
-
             const hash = window.location.hash
             if (!hash || !hash.startsWith('#?')) return
 
@@ -85,14 +80,17 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
                     index++
                 }
 
-                if (stages.length > 0) {
-                    dispatch({type: 'SET_START_TIME', payload: startTime})
-                    dispatch({type: 'SET_END_TIME', payload: endTime})
-
-                    stages.forEach(stage => {
-                        dispatch({type: 'ADD_STAGE', payload: stage})
-                    })
+                // Create new state from URL
+                const newState: MeetingState = {
+                    startTime: startTime,
+                    endTime: endTime,
+                    stages: stages,
+                    currentStageIndex: -1,
+                    meetingStatus: 'not_started',
+                    lastUpdateTime: null
                 }
+
+                dispatch({type: 'RESET_STATE', payload: newState})
 
                 // Mark that we've restored from URL
                 hasRestoredFromUrl.current = true
@@ -102,8 +100,21 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
             }
         }
 
+        // Only restore on initial load, not when state changes
         restoreFromUrl()
-    }, [state])
+
+        // Also listen for hash changes to restore from URL
+        const handleHashChange = () => {
+            hasRestoredFromUrl.current = false
+            restoreFromUrl()
+        }
+
+        window.addEventListener('hashchange', handleHashChange)
+
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange)
+        }
+    }, [])
 
     // Save state to URL when state changes
     useEffect(() => {
@@ -123,7 +134,10 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
             window.history.replaceState(null, '', `#?${params.toString()}`)
         }
 
-        saveToUrl()
+        // Throttle the URL updates to avoid excessive writes
+        const timeoutId = setTimeout(saveToUrl, 100)
+
+        return () => clearTimeout(timeoutId)
     }, [state.startTime, state.endTime, state.stages, state.currentStageIndex, state.meetingStatus])
 
     const calculateTimeRemaining = () => {
