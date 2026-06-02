@@ -16,10 +16,12 @@ const TimerScreen = () => {
     const [isAudioPermissionModalOpen, setIsAudioPermissionModalOpen] = useState(true)
     // Tracks whether audio context is initialized and ready
     const [isAudioReady, setIsAudioReady] = useState(false)
+    // Tracks whether notifications are enabled
+    const [isNotificationSelected, setIsNotificationSelected] = useState(false)
     // Tracks which warning sounds have already been played (to prevent duplicates)
-    const [playedWarnSounds, setPlayedWarnSounds] = useState<boolean>(false)
+    const [warnNotified, setWarnNotified] = useState<boolean>(false)
     // Tracks which error sounds have already been played (to prevent duplicates)
-    const [playedErrorSounds, setPlayedErrorSounds] = useState<boolean>(false)
+    const [errorNotified, setErrorNotified] = useState<boolean>(false)
 
     // Reference to the Web Audio API context
     const audioContextRef = useRef<AudioContext | null>(null)
@@ -79,27 +81,58 @@ const TimerScreen = () => {
         })
     }
 
+    const notifyOneMinute = () => {
+
+        setWarnNotified(true);
+
+        if (isNotificationSelected) {
+            console.log("notifyOneMinute");
+            if ('Notification' in window && window.Notification.permission === 'granted') {
+                new Notification('Meeting Timer', {
+                    body: 'One minute left until the meeting stage changes',
+                    icon: '/favicon.svg'
+                })
+            }
+        }
+        if (isAudioReady) {
+            playWarningSound()
+        }
+    }
+
+    const notifyExpired = () => {
+
+        setWarnNotified(true);
+        setErrorNotified(true);
+
+        if (isNotificationSelected && 'Notification' in window && window.Notification.permission === 'granted') {
+            new Notification('Meeting Timer', {
+                body: "It's time to change the stage of the meeting",
+                icon: '/favicon.svg'
+            })
+        }
+        if (isAudioReady) {
+            playErrorSound()
+        }
+    }
+
     const checkAndPlaySounds = () => {
 
         const {stageRemaining} = calculateTimeRemaining()
 
-        if (stageRemaining <= 0 && !playedErrorSounds) {
-            setPlayedWarnSounds(true);
-            setPlayedErrorSounds(true);
-            playErrorSound();
+        if (stageRemaining <= 0 && !errorNotified) {
+            notifyExpired();
             return;
         }
 
-        if (stageRemaining <= 61 && !playedWarnSounds) {
-            setPlayedWarnSounds(true);
-            playWarningSound();
+        if (stageRemaining <= 61 && !warnNotified) {
+            notifyOneMinute();
             return;
         }
     }
 
     const resetPlayedSounds = () => {
-        setPlayedWarnSounds(false);
-        setPlayedErrorSounds(false);
+        setWarnNotified(false);
+        setErrorNotified(false);
     }
 
     useEffect(() => {
@@ -119,7 +152,7 @@ const TimerScreen = () => {
             if (interval) clearInterval(interval)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.meetingStatus, time, isAudioReady, playedWarnSounds, playedErrorSounds])
+    }, [state.meetingStatus, time, isAudioReady, isNotificationSelected, warnNotified, errorNotified])
 
     const startMeeting = () => {
         resetPlayedSounds();
@@ -139,12 +172,45 @@ const TimerScreen = () => {
         }
     }
 
-    const handleAudioPermission = (allowSound: boolean) => {
+    const handleNotificationPermission = async (mode: string) => {
         setIsAudioPermissionModalOpen(false)
-        if (allowSound) {
-            initializeAudioContext();
+
+        if (mode === 'notifications' || mode === 'both') {
+            setIsNotificationSelected(true)
+            if ('Notification' in window) {
+                let permission = Notification.permission
+
+                if (permission === 'default') {
+                    permission = await Notification.requestPermission()
+                }
+
+                if (permission === 'denied') {
+                    setIsNotificationSelected(false)
+                    if (mode === 'both') {
+                        alert('Уведомления заблокированы в настройках браузера. Используется только звук.');
+                    }
+                }
+            } else {
+                setIsNotificationSelected(false)
+                console.warn('Web Notification API not supported')
+            }
         }
+
+        if (mode === 'both' || mode === 'sound_only') {
+            if (mode === 'sound_only') {
+                setIsNotificationSelected(false)
+            }
+            initializeAudioContext()
+        }
+
+        if (mode === "none") {
+            setIsNotificationSelected(false)
+            setIsAudioReady(false)
+        }
+
+        resetPlayedSounds();
     }
+
 
     const markStageCompleted = (stageIndex: number) => {
         resetPlayedSounds();
@@ -178,13 +244,13 @@ const TimerScreen = () => {
             <audio ref={warnAudioRef} src="./warn.mp3" preload="auto"/>
             <audio ref={errorAudioRef} src="./error.mp3" preload="auto"/>
 
-            {/* Audio permission modal */}
+            {/* Notification permission modal */}
             <Modal
                 isOpen={isAudioPermissionModalOpen}
                 onRequestClose={() => setIsAudioPermissionModalOpen(false)}
                 shouldCloseOnOverlayClick={false}
                 shouldCloseOnEsc={false}
-                contentLabel="Audio Permission"
+                contentLabel="Notification Permission"
                 style={{
                     overlay: {
                         backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -204,21 +270,32 @@ const TimerScreen = () => {
                 }}
             >
                 <div className="text-center p-5">
-                    <h2 className="text-xl font-bold text-gray-900 pb-1">Enable Sounds</h2>
-                    <p className="text-gray-600 pb-4">Would you like to enable sound notifications for meeting
-                        events?</p>
-                    <div className="flex justify-center space-x-4">
+                    <h2 className="text-xl font-bold text-gray-900 pb-1">Notification Settings</h2>
+                    <p className="text-gray-600 pb-4">Choose how you would like to receive meeting notifications:</p>
+                    <div className="space-y-3">
                         <button
-                            onClick={() => handleAudioPermission(true)}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
+                            onClick={() => handleNotificationPermission('both')}
+                            className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                         >
-                            Yes, enable sounds
+                            Both notifications and sounds
                         </button>
                         <button
-                            onClick={() => handleAudioPermission(false)}
-                            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium"
+                            onClick={() => handleNotificationPermission('notifications')}
+                            className="w-full px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                         >
-                            No, skip
+                            Notifications only
+                        </button>
+                        <button
+                            onClick={() => handleNotificationPermission('sound_only')}
+                            className="w-full px-6 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
+                        >
+                            Sound only
+                        </button>
+                        <button
+                            onClick={() => handleNotificationPermission('none')}
+                            className="w-full px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium"
+                        >
+                            No notifications
                         </button>
                     </div>
                 </div>
