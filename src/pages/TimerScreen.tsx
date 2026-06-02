@@ -80,7 +80,6 @@ const TimerScreen = () => {
     }
 
     const checkAndPlaySounds = () => {
-        if (!isAudioReady) return
 
         const {stageRemaining} = calculateTimeRemaining()
 
