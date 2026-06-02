@@ -177,17 +177,14 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
             })
         }
 
-        case 'UPDATE_STAGES_DISPLAYED_TIMES': {
+        case 'UPDATE_STAGES_DISPLAYED_TIMES':
             return calculateDisplayedStageTimes(state);
-        }
 
-        case 'RESET_STATE': {
-            console.log('RESET_STATE');
+        case 'RESET_STATE':
             return calculateDisplayedStageTimes({
                 ...action.payload,
                 stages: calculatePlannedStageTimes(action.payload.stages, action.payload.startTime || now)
             });
-        }
 
         default:
             return state

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import Modal from 'react-modal'
 import {format} from 'date-fns'
 import {CheckIcon, ClockIcon, Pencil2Icon, PlayIcon, TrackNextIcon} from '@radix-ui/react-icons'
@@ -6,9 +6,102 @@ import {useMeeting} from "../context/useMeeting.ts"
 import MeetingSetup from "../pages/MeetingSetup"
 
 const TimerScreen = () => {
+    // Meeting context and utilities
     const {state, dispatch, calculateTimeRemaining, validateMeeting} = useMeeting()
+    // Current time counter for UI updates
     const [time, setTime] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    // Controls the meeting configuration modal visibility
+    const [isModalOpen, _setIsModalOpen] = useState(false)
+    // Controls the audio permission modal visibility (shown on first load)
+    const [isAudioPermissionModalOpen, setIsAudioPermissionModalOpen] = useState(true)
+    // Tracks whether audio context is initialized and ready
+    const [isAudioReady, setIsAudioReady] = useState(false)
+    // Tracks which warning sounds have already been played (to prevent duplicates)
+    const [playedWarnSounds, setPlayedWarnSounds] = useState<boolean>(false)
+    // Tracks which error sounds have already been played (to prevent duplicates)
+    const [playedErrorSounds, setPlayedErrorSounds] = useState<boolean>(false)
+
+    // Reference to the Web Audio API context
+    const audioContextRef = useRef<AudioContext | null>(null)
+    // Reference to the silent audio element (keeps tab active)
+    const silentAudioRef = useRef<HTMLAudioElement>(null)
+    // Reference to the warning audio element
+    const warnAudioRef = useRef<HTMLAudioElement>(null)
+    // Reference to the error audio element
+    const errorAudioRef = useRef<HTMLAudioElement>(null)
+    // Reference to the silent audio interval timer
+    const silentIntervalRef = useRef<number | null>(null)
+
+    const setIsModalOpen = (open: boolean) => {
+        _setIsModalOpen(open);
+        resetPlayedSounds();
+    }
+
+    const startSilentAudioLoop = () => {
+        if (!isAudioReady || !silentAudioRef.current) return
+
+        // Play silent audio to prevent tab throttling
+        const playSilent = () => {
+            if (!silentAudioRef.current) return
+            silentAudioRef.current.currentTime = 0
+            silentAudioRef.current.play().catch(e => {
+                console.warn('Failed to play silent audio:', e)
+            })
+        }
+
+        playSilent()
+
+        silentIntervalRef.current = window.setInterval(playSilent, 1000) as unknown as number
+    }
+
+    const stopSilentAudioLoop = () => {
+        if (silentIntervalRef.current) {
+            window.clearInterval(silentIntervalRef.current)
+            silentIntervalRef.current = null
+        }
+    }
+
+    const playWarningSound = () => {
+        if (!isAudioReady || !warnAudioRef.current) return
+
+        warnAudioRef.current.currentTime = 0
+        warnAudioRef.current.play().catch(e => {
+            console.warn('Failed to play warning sound:', e)
+        })
+    }
+
+    const playErrorSound = () => {
+        if (!isAudioReady || !errorAudioRef.current) return
+
+        errorAudioRef.current.currentTime = 0
+        errorAudioRef.current.play().catch(e => {
+            console.warn('Failed to play error sound:', e)
+        })
+    }
+
+    const checkAndPlaySounds = () => {
+        if (!isAudioReady) return
+
+        const {stageRemaining} = calculateTimeRemaining()
+
+        if (stageRemaining <= 0 && !playedErrorSounds) {
+            setPlayedWarnSounds(true);
+            setPlayedErrorSounds(true);
+            playErrorSound();
+            return;
+        }
+
+        if (stageRemaining <= 61 && !playedWarnSounds) {
+            setPlayedWarnSounds(true);
+            playWarningSound();
+            return;
+        }
+    }
+
+    const resetPlayedSounds = () => {
+        setPlayedWarnSounds(false);
+        setPlayedErrorSounds(false);
+    }
 
     useEffect(() => {
         // Always update meeting progression and current time
@@ -18,19 +111,44 @@ const TimerScreen = () => {
             if (state.meetingStatus !== 'completed') {
                 dispatch({type: 'UPDATE_STAGES_DISPLAYED_TIMES', payload: state.stages})
             }
+
+            // Check for sound events based on absolute time
+            checkAndPlaySounds()
         }, 1000)
 
         return () => {
             if (interval) clearInterval(interval)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.meetingStatus, time])
+    }, [state.meetingStatus, time, isAudioReady, playedWarnSounds, playedErrorSounds])
 
     const startMeeting = () => {
+        resetPlayedSounds();
         dispatch({type: 'START_MEETING'})
     }
 
+    const initializeAudioContext = () => {
+        if (!isAudioReady && !audioContextRef.current) {
+            try {
+                const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext // eslint-disable-line @typescript-eslint/no-explicit-any
+                audioContextRef.current = new AudioContext()
+                setIsAudioReady(true)
+                startSilentAudioLoop()
+            } catch (e) {
+                console.error('Failed to initialize audio context:', e)
+            }
+        }
+    }
+
+    const handleAudioPermission = (allowSound: boolean) => {
+        setIsAudioPermissionModalOpen(false)
+        if (allowSound) {
+            initializeAudioContext();
+        }
+    }
+
     const markStageCompleted = (stageIndex: number) => {
+        resetPlayedSounds();
         dispatch({type: 'MARK_STAGE_COMPLETED', payload: stageIndex})
     }
 
@@ -48,8 +166,65 @@ const TimerScreen = () => {
 
     const {isValid} = validateMeeting();
 
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            stopSilentAudioLoop()
+        }
+    }, [])
+
     return (
         <>
+            <audio ref={silentAudioRef} src="./silent.mp3" preload="auto"/>
+            <audio ref={warnAudioRef} src="./warn.mp3" preload="auto"/>
+            <audio ref={errorAudioRef} src="./error.mp3" preload="auto"/>
+
+            {/* Audio permission modal */}
+            <Modal
+                isOpen={isAudioPermissionModalOpen}
+                onRequestClose={() => setIsAudioPermissionModalOpen(false)}
+                shouldCloseOnOverlayClick={false}
+                shouldCloseOnEsc={false}
+                contentLabel="Audio Permission"
+                style={{
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 2000
+                    },
+                    content: {
+                        inset: '50% auto auto 50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: '400px',
+                        width: '90%',
+                        padding: '2rem',
+                        borderRadius: '12px',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                        outline: 'none',
+                        zIndex: 2001
+                    }
+                }}
+            >
+                <div className="text-center p-5">
+                    <h2 className="text-xl font-bold text-gray-900 pb-1">Enable Sounds</h2>
+                    <p className="text-gray-600 pb-4">Would you like to enable sound notifications for meeting
+                        events?</p>
+                    <div className="flex justify-center space-x-4">
+                        <button
+                            onClick={() => handleAudioPermission(true)}
+                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
+                        >
+                            Yes, enable sounds
+                        </button>
+                        <button
+                            onClick={() => handleAudioPermission(false)}
+                            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium"
+                        >
+                            No, skip
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
             <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-6">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
                     <div className="p-6">
@@ -178,8 +353,8 @@ const TimerScreen = () => {
                                                 <div className="flex items-center space-x-4">
                                                     {isCurrent && !isCompleted && (
                                                         <div className="flex items-center space-x-2 ml-4">
-                                                        <span
-                                                            className="text-sm text-blue-600 font-medium">Current</span>
+                                                            <span
+                                                                className="text-sm text-blue-600 font-medium">Current</span>
                                                             <button
                                                                 onClick={(e) => {
                                                                     e.stopPropagation()
