@@ -142,10 +142,11 @@ const TimerScreen = () => {
             setTime(time + 1);
             if (state.meetingStatus !== 'completed') {
                 dispatch({type: 'UPDATE_STAGES_DISPLAYED_TIMES', payload: state.stages})
+
+                // Check for sound events based on absolute time
+                checkAndPlaySounds()
             }
 
-            // Check for sound events based on absolute time
-            checkAndPlaySounds()
         }, 1000)
 
         return () => {
