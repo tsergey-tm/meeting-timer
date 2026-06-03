@@ -135,6 +135,8 @@ const TimerScreen = () => {
         setErrorNotified(false);
     }
 
+    const {isValid} = validateMeeting();
+
     useEffect(() => {
         // Always update meeting progression and current time
         const interval = setInterval(() => {
@@ -144,7 +146,9 @@ const TimerScreen = () => {
                 dispatch({type: 'UPDATE_STAGES_DISPLAYED_TIMES', payload: state.stages})
 
                 // Check for sound events based on absolute time
-                checkAndPlaySounds()
+                if (isValid) {
+                    checkAndPlaySounds()
+                }
             }
 
         }, 1000)
@@ -229,8 +233,6 @@ const TimerScreen = () => {
             `${mins.toString().padStart(2, '0')}:` +
             `${secs.toString().padStart(2, '0')}`
     }
-
-    const {isValid} = validateMeeting();
 
     // Cleanup on unmount
     useEffect(() => {
