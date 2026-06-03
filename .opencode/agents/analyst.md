@@ -1,7 +1,6 @@
 ---
 description: Analyzes React/TypeScript requirements and creates architectural specifications.
 mode: subagent
-model: llama.cpp
 temperature: 0.1
 permission:
   edit: deny

@@ -1,7 +1,6 @@
 ---
 description: Reviews React + TypeScript code quality and logs session results to CHANGELOG_AI.md.
 mode: subagent
-model: llama.cpp
 temperature: 0.1
 permission:
   edit: allow

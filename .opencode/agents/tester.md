@@ -1,7 +1,6 @@
 ---
 description: Generates Vitest / React Testing Library tests, executes them, and verifies code correctness.
 mode: subagent
-model: llama.cpp
 temperature: 0.1
 permission:
   edit: allow
