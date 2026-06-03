@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {fireEvent, render, screen} from '@testing-library/react'
-import {MeetingProvider} from '../context/MeetingContext.tsx'
+import {MeetingProvider} from '../context/MeetingContext/MeetingContext.tsx'
 import TimerScreen from '../pages/TimerScreen'
 import {format} from 'date-fns'
 import '@testing-library/jest-dom'

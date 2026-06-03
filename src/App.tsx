@@ -1,5 +1,5 @@
 import TimerScreen from './pages/TimerScreen'
-import {MeetingProvider} from './context/MeetingContext'
+import {MeetingProvider} from './context/MeetingContext/MeetingContext.tsx'
 import "./App.css"
 
 function App() {

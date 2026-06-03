@@ -1,7 +1,9 @@
 import {type ReactNode, useEffect, useReducer, useRef} from 'react'
 import {differenceInMinutes, format, isBefore} from 'date-fns'
-import {type Stage} from '../utils/stageUtils'
-import {initialState, MeetingContext, type MeetingState, reducer} from "./MeetingContext.types.ts";
+import {type Stage} from '../../utils/stageUtils.ts'
+import {initialState, MeetingContext, type MeetingState} from "./MeetingContext.types.ts";
+import {reducer} from "./reducer.ts";
+
 
 export const MeetingProvider = ({children}: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -207,5 +209,3 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
         </MeetingContext.Provider>
     )
 }
-
-export type {Stage}

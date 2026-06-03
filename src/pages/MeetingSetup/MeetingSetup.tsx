@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useState} from 'react'
 import {format} from 'date-fns'
 import {CalendarIcon, ClockIcon, Pencil2Icon, PlusIcon, TrashIcon} from '@radix-ui/react-icons'
-import {useMeeting} from "../../context/useMeeting.ts";
+import {useMeeting} from "../../context/MeetingContext/useMeeting.ts";
 
 interface MeetingSetupProps {
     onClose?: () => void

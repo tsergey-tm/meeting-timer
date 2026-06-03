@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {calculateDisplayedStageTimes} from '../utils/stageUtils.ts'
-import type {MeetingState} from "../context/MeetingContext.types.ts";
+import type {MeetingState} from "../context/MeetingContext/MeetingContext.types.ts";
 
 describe('calculateDisplayedStageTimes function', () => {
     let now: Date

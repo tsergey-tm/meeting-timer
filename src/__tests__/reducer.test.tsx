@@ -1,5 +1,6 @@
 import {beforeEach, describe, expect, it} from 'vitest'
-import {type Action, initialState, type MeetingState, reducer} from '../context/MeetingContext.types.ts'
+import {type Action, initialState, type MeetingState} from '../context/MeetingContext/MeetingContext.types.ts'
+import {reducer} from "../context/MeetingContext/reducer.ts";
 
 describe('Meeting Reducer', () => {
     let now: Date

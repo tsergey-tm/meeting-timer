@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
 import Modal from 'react-modal'
 import {ClockIcon, Pencil2Icon} from '@radix-ui/react-icons'
-import {useMeeting} from "../../context/useMeeting.ts"
+import {useMeeting} from "../../context/MeetingContext/useMeeting.ts"
 import MeetingSetup from "../MeetingSetup";
 import TimerDisplay from './components/TimerDisplay.tsx'
 import StageList from './components/StageList.tsx'
