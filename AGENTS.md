@@ -32,8 +32,8 @@ passing all stages in order.
 
 ### [Stage 5: Logging]
 
-- After a successful review and passing of tests, write a short summary of the work done at the end of the
-  `CHANGELOG_AI.md` file.
+- After a successful review and passing of tests, write a short summary of the work done at the beginning of the
+  `CHANGELOG_AI.md` file in English.
 
 ## Setup & Verification Commands
 
