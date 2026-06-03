@@ -22,7 +22,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
         try {
             const [hours, minutes] = e.target.value.split(':').map(Number)
             const today = new Date()
-            const time = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes)
+            const time = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours || 0, minutes || 0)
             dispatch({type: 'SET_START_TIME', payload: time})
             setStartTime(e.target.value)
         } catch {

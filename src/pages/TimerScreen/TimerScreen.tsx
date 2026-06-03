@@ -132,7 +132,7 @@ const TimerScreen = () => {
             if ('Notification' in window && window.Notification.permission === 'granted') {
                 new Notification('Meeting Timer', {
                     body: 'One minute left until the meeting stage changes',
-                    icon: '/favicon.svg'
+                    icon: 'favicon.svg'
                 })
             }
         }
@@ -145,7 +145,7 @@ const TimerScreen = () => {
         if (isNotificationSelected && 'Notification' in window && window.Notification.permission === 'granted') {
             new Notification('Meeting Timer', {
                 body: "It's time to change the stage of the meeting",
-                icon: '/favicon.svg'
+                icon: 'favicon.svg'
             })
         }
     }
