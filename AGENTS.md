@@ -1,51 +1,41 @@
 # AGENTS.md
 
-## CRITICAL EXECUTION RULES (READ THIS FIRST)
+## CRITICAL EXECUTION RULES
 
-- **DO NOT WRITE CODE OR SOLUTION DIRECTLY.** As the main orchestrator, your ONLY job is to delegate tasks to sub-agents
-  sequentially.
-- **NEVER** start implementation (`build` mode) yourself.
-- If you generate code directly instead of calling `@analyst`, you are failing the system constraint.
+- **YOU ARE AN ORCHESTRATOR ONLY.** You are forbidden from modifying files or writing code blocks yourself.
+- Your only tool is routing tasks to the specific sub-agents sequentially: `@analyst`, `@coder`, `@tester`, and
+  `@reviewer`.
 
 ## Project Workflow Pipeline
 
-You must execute the following 5 stages in strict, non-linear order. Wait for each sub-agent to finish before calling
-the next one.
-
 ### [Stage 1: Planning & Specs]
 
-- ALWAYS start by invoking the `@analyst` sub-agent.
-- The analyst must break down the React component structure, state management, and TypeScript types, then output a
-  strict Markdown checklist.
+- **Action:** Invoke the `@analyst` sub-agent. Pass the user's request.
+- **Output:** Wait for the technical specification checklist.
 
 ### [Stage 2: Implementation]
 
-- Pass the analyst's checklist to the primary execution agent (`build` mode).
-- Write clean, modular React components using TypeScript. Ensure strict typing (no `any`).
+- **Action:** Invoke the `@coder` sub-agent. Pass the checklist from Stage 1.
+- **Output:** `@coder` will create or update the React/TypeScript files in `src/`.
 
-### [Stage 3: Linting & Code Style]
+### [Stage 3: Linting & Fixes]
 
-- CRITICAL: Run the linter using the Bash tool (`npm run lint`).
-- If there are linting errors or warnings, the execution agent MUST fix them immediately.
-- Do not proceed to testing until the linter runs with ZERO errors and ZERO warnings.
+- **Action:** Execute the bash tool to run `npm run lint`.
+- **Logic:** If the linter returns errors or warnings, pass the lint logs back to `@coder` and ask to fix them. Repeat
+  until `npm run lint` passes with 0 errors and 0 warnings.
 
 ### [Stage 4: Testing & Verification]
 
-- Delegate test creation to the `@tester` sub-agent.
-- The tester MUST generate unit/component tests using Vitest and React Testing Library.
-- CRITICAL: Execute tests using the Bash tool (`npx vitest run`).
-- If tests fail, send logs back to the implementation stage. Repeat up to 5 times. Do not proceed until tests pass 100%.
+- **Action:** Invoke the `@tester` sub-agent to generate and run Vitest tests.
+- **Logic:** If tests fail, pass the test logs back to `@coder` for a bugfix. Repeat up to 5 times. Do not proceed until
+  tests pass 100%.
 
-### [Stage 5: Code Review & AI Changelog]
+### [Stage 5: Code Review & Log]
 
-- Once tests pass, invoke the `@reviewer` sub-agent.
-- The reviewer will check for React anti-patterns, SOLID violations, and architecture.
-- Apply the reviewer's fixes, re-run the linter and tests one final time.
-- **CRITICAL:** The system MUST check for the existence of `CHANGELOG_AI.md` in the root folder. If it does not exist,
-  create it. Append a structured Markdown entry documenting the changes made in this session.
+- **Action:** Invoke the `@reviewer` sub-agent to inspect the final code quality and append the session results to
+  `CHANGELOG_AI.md`.
 
 ## Setup & Verification Commands
 
-- **Build Command:** `npm run build`
 - **Lint Command:** `npm run lint`
 - **Test Command:** `npx vitest run`

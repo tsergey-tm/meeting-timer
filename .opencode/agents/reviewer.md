@@ -4,7 +4,7 @@ mode: subagent
 temperature: 0.1
 permission:
   edit: allow
-  bash: deny
+  bash: allow
 ---
 
 You are a Senior Frontend Engineer and Release Manager.
