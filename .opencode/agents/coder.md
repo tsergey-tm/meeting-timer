@@ -21,3 +21,7 @@ Rules:
 6. Do not run tests (that is the job of `@tester`).
 
 You have full permission to modify and create files in the `/` directory.
+
+## Setup & Verification Commands
+
+- **Lint Command:** `npm run lint`

@@ -19,3 +19,7 @@ Your duties are split into two strict phases:
 - Output your feedback as a report in the chat. DO NOT modify any code files in `src/` yourself. Let the @coder and
   @tester agent apply your feedback.
 
+## Setup & Verification Commands
+
+- **Lint Command:** `npm run lint`
+- **Test Command:** `npx vitest run`

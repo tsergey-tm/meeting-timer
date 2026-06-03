@@ -21,3 +21,9 @@ Your responsibilities:
 
 CRITICAL: You cannot sign off on a feature unless BOTH the linter and the Vitest command return an exit code of 0 with
 absolutely no warnings.
+
+## Setup & Verification Commands
+
+- **Lint Command:** `npm run lint`
+- **Test Command:** `npx vitest run`
+
