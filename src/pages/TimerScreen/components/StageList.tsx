@@ -1,0 +1,96 @@
+import {format} from 'date-fns'
+import {CheckIcon, ClockIcon, TrackNextIcon} from '@radix-ui/react-icons'
+
+interface Stage {
+    name: string
+    duration: number
+    actualEndTime: Date | null
+    displayedStartTime: Date | null
+    plannedStartTime: Date | null
+}
+
+interface StageListProps {
+    stages: Stage[]
+    currentStageIndex: number
+    markStageCompleted: (index: number) => void
+}
+
+const StageList = ({
+                       stages,
+                       currentStageIndex,
+                       markStageCompleted
+                   }: StageListProps) => {
+    return (
+        <div className="border-t pt-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Meeting Stages</h2>
+            <div className="space-y-3">
+                {stages.map((stage, index) => {
+                    const isCurrent = index === currentStageIndex
+                    const isCompleted = stage.actualEndTime !== null
+                    const isDelayed = stage.displayedStartTime && stage.plannedStartTime &&
+                        stage.displayedStartTime.getTime() > stage.plannedStartTime.getTime() + 60_000
+
+                    return (
+                        <div
+                            key={index}
+                            className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all ${isCompleted ? 'bg-gray-100 opacity-70' : isCurrent ? 'bg-blue-100 border-2 border-blue-300' : 'bg-gray-50 hover:bg-gray-100'}`}
+                            onClick={() => !isCompleted && markStageCompleted(index)}
+                        >
+                            <div className="flex-1">
+                                <div className="flex items-center">
+                                    <div
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${isCompleted ? 'bg-gray-400' : isCurrent ? 'bg-blue-600' : 'bg-gray-300'}`}>
+                                        {isCompleted ? (
+                                            <CheckIcon className="h-5 w-5 text-white"/>
+                                        ) : isCurrent ? (
+                                            <ClockIcon className="h-5 w-5 text-white"/>
+                                        ) : (
+                                            <span
+                                                className="text-white text-sm font-bold">{index + 1}</span>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div
+                                            className={`font-medium ${isCurrent ? 'text-blue-900' : isCompleted ? 'text-gray-600' : 'text-gray-900'}`}>
+                                            {stage.name}
+                                        </div>
+                                        <div
+                                            className={`text-sm ${isCurrent ? 'text-blue-700' : isCompleted ? 'text-gray-500' : 'text-gray-600'}`}>
+                                            {stage.duration} minutes
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-4">
+                                {isCurrent && !isCompleted && (
+                                    <div className="flex items-center space-x-2 ml-4">
+                    <span
+                        className="text-sm text-blue-600 font-medium">Current</span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                markStageCompleted(index)
+                                            }}
+                                            className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-100"
+                                            aria-label="Mark stage complete"
+                                        >
+                                            <TrackNextIcon className="h-4 w-4"/>
+                                        </button>
+                                    </div>
+                                )}
+                                {stage.displayedStartTime && (
+                                    <div
+                                        className={`text-sm font-medium ${isDelayed ? 'text-orange-600' : 'text-gray-600'}`}>
+                                        {format(stage.displayedStartTime, 'HH:mm')}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+    )
+}
+
+export default StageList
