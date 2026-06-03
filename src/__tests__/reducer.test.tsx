@@ -210,7 +210,7 @@ describe('Meeting Reducer', () => {
 
     describe('MARK_STAGE_COMPLETED action', () => {
         it('should mark current stage as completed', () => {
-            const inProgressState = {
+            const inProgressState: MeetingState = {
                 ...mockState,
                 meetingStatus: 'in_progress',
                 currentStageIndex: 0,
@@ -232,7 +232,7 @@ describe('Meeting Reducer', () => {
         })
 
         it('should complete meeting when last stage is marked complete', () => {
-            const inProgressState = {
+            const inProgressState: MeetingState = {
                 ...mockState,
                 meetingStatus: 'in_progress',
                 currentStageIndex: 1,
@@ -256,7 +256,7 @@ describe('Meeting Reducer', () => {
         })
 
         it('should set actual start time for next stage', () => {
-            const inProgressState = {
+            const inProgressState: MeetingState = {
                 ...mockState,
                 meetingStatus: 'in_progress',
                 currentStageIndex: 0,
@@ -278,7 +278,7 @@ describe('Meeting Reducer', () => {
 
     describe('UPDATE_STAGES_DISPLAYED_TIMES action', () => {
         it('should calculate and update displayed times for all stages', () => {
-            const inProgressState = {
+            const inProgressState: MeetingState = {
                 ...mockState,
                 meetingStatus: 'in_progress',
                 currentStageIndex: 0,

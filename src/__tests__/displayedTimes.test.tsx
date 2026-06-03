@@ -1,5 +1,6 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {calculateDisplayedStageTimes} from '../utils/stageUtils.ts'
+import type {MeetingState} from "../context/MeetingContext.types.ts";
 
 describe('calculateDisplayedStageTimes function', () => {
     let now: Date
@@ -15,7 +16,7 @@ describe('calculateDisplayedStageTimes function', () => {
     })
 
     it('should return state unchanged when startTime is null', () => {
-        const state = {
+        const state: MeetingState = {
             startTime: null,
             endTime: new Date(now.getTime() + 3600000),
             stages: [],
@@ -30,7 +31,7 @@ describe('calculateDisplayedStageTimes function', () => {
 
     describe('not started meeting', () => {
         it('should calculate start time for first stage when meeting not started', () => {
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() + 1800000), // 30 min in future
                 endTime: new Date(now.getTime() + 5400000),   // 90 min total
                 stages: [
@@ -59,13 +60,13 @@ describe('calculateDisplayedStageTimes function', () => {
             const result = calculateDisplayedStageTimes(state)
 
             expect(result.stages[0].displayedStartTime).toBeDefined()
-            expect(result.stages[0].displayedStartTime!.getTime()).toBe(state.startTime.getTime())
+            expect(result.stages[0].displayedStartTime!.getTime()).toBe(state.startTime!.getTime())
             expect(result.stages[1].displayedStartTime).toBeDefined()
-            expect(result.stages[1].displayedStartTime!.getTime()).toBe(state.startTime.getTime() + 15 * 60000)
+            expect(result.stages[1].displayedStartTime!.getTime()).toBe(state.startTime!.getTime() + 15 * 60000)
         })
 
         it('should adjust start time if meeting is late', () => {
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() - 3600000), // 1 hour ago
                 endTime: new Date(now.getTime() + 1800000),   // 30 min from now
                 stages: [
@@ -101,7 +102,7 @@ describe('calculateDisplayedStageTimes function', () => {
     describe('in progress meeting', () => {
         it('should use actual start time when meeting has started', () => {
             const actualStartTime = new Date(now.getTime() - 900000) // 15 min ago
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() - 1800000), // 30 min ago
                 endTime: new Date(now.getTime() + 1800000),   // 30 min from now
                 stages: [
@@ -137,7 +138,7 @@ describe('calculateDisplayedStageTimes function', () => {
         it('should calculate displayed time for next stage', () => {
             const actualStartTime = new Date(now.getTime() - 900000) // 15 min ago
             const actualEndTime = new Date(now.getTime() - 600000)   // 10 min ago
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() - 1800000), // 30 min ago
                 endTime: new Date(now.getTime() + 1200000),   // 20 min from now
                 stages: [
@@ -177,7 +178,7 @@ describe('calculateDisplayedStageTimes function', () => {
             const end1 = new Date(now.getTime() - 900000)   // 15 min ago
             const start2 = new Date(now.getTime() - 900000)  // 15 min ago
             const end2 = new Date(now.getTime() - 600000)   // 10 min ago
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() - 1800000), // 30 min ago
                 endTime: new Date(now.getTime()),             // now
                 stages: [
@@ -214,7 +215,7 @@ describe('calculateDisplayedStageTimes function', () => {
 
     describe('edge cases', () => {
         it('should handle single stage meeting', () => {
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() + 1800000),
                 endTime: new Date(now.getTime() + 2100000),
                 stages: [
@@ -239,7 +240,7 @@ describe('calculateDisplayedStageTimes function', () => {
         })
 
         it('should handle empty stages array', () => {
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() + 1800000),
                 endTime: new Date(now.getTime() + 2100000),
                 stages: [],
@@ -254,7 +255,7 @@ describe('calculateDisplayedStageTimes function', () => {
         })
 
         it('should handle stages with zero duration', () => {
-            const state = {
+            const state: MeetingState = {
                 startTime: new Date(now.getTime() + 1800000),
                 endTime: new Date(now.getTime() + 2100000),
                 stages: [

@@ -54,7 +54,7 @@ const TimerScreen = () => {
 
         playSilent()
 
-        silentIntervalRef.current = window.setInterval(playSilent, 1000) as unknown as number
+        silentIntervalRef.current = window.setInterval(playSilent, 1000)
     }
 
     const stopSilentAudioLoop = () => {
@@ -168,8 +168,7 @@ const TimerScreen = () => {
     const initializeAudioContext = () => {
         if (!isAudioReady && !audioContextRef.current) {
             try {
-                const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext // eslint-disable-line @typescript-eslint/no-explicit-any
-                audioContextRef.current = new AudioContext()
+                audioContextRef.current = new AudioContext();
                 setIsAudioReady(true)
                 startSilentAudioLoop()
             } catch (e) {
@@ -278,25 +277,33 @@ const TimerScreen = () => {
                     <p className="text-gray-600 pb-4">Choose how you would like to receive meeting notifications:</p>
                     <div className="space-y-3">
                         <button
-                            onClick={() => handleNotificationPermission('both')}
+                            onClick={() => {
+                                void handleNotificationPermission('both')
+                            }}
                             className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                         >
                             Both notifications and sounds
                         </button>
                         <button
-                            onClick={() => handleNotificationPermission('notifications')}
+                            onClick={() => {
+                                void handleNotificationPermission('notifications')
+                            }}
                             className="w-full px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                         >
                             Notifications only
                         </button>
                         <button
-                            onClick={() => handleNotificationPermission('sound_only')}
+                            onClick={() => {
+                                void handleNotificationPermission('sound_only')
+                            }}
                             className="w-full px-6 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                         >
                             Sound only
                         </button>
                         <button
-                            onClick={() => handleNotificationPermission('none')}
+                            onClick={() => {
+                                void handleNotificationPermission('none')
+                            }}
                             className="w-full px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium"
                         >
                             No notifications
@@ -495,5 +502,6 @@ const TimerScreen = () => {
         </>
     )
 }
+
 
 export default TimerScreen;

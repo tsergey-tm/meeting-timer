@@ -32,7 +32,7 @@ describe('Meeting Integration Tests', () => {
         })
 
         vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
-            return setTimeout(cb, 0) as unknown as number
+            return setTimeout(cb, 0)
         })
     })
 
@@ -41,7 +41,7 @@ describe('Meeting Integration Tests', () => {
         vi.restoreAllMocks()
     })
 
-    it('should complete a full meeting lifecycle', async () => {
+    it('should complete a full meeting lifecycle', () => {
         render(
             <MeetingProvider>
                 <TimerScreen/>
@@ -52,7 +52,7 @@ describe('Meeting Integration Tests', () => {
         expect(screen.getByText('Meeting Timer')).toBeInTheDocument()
     })
 
-    it('should handle time progression during meeting', async () => {
+    it('should handle time progression during meeting', () => {
         // Just make sure the component renders without errors
         render(
             <MeetingProvider>
@@ -63,7 +63,7 @@ describe('Meeting Integration Tests', () => {
         expect(screen.getByText('Meeting Timer')).toBeInTheDocument()
     })
 
-    it('should handle stage transitions', async () => {
+    it('should handle stage transitions', () => {
         // Just make sure the component renders without errors
         render(
             <MeetingProvider>
@@ -74,7 +74,7 @@ describe('Meeting Integration Tests', () => {
         expect(screen.getByText('Meeting Timer')).toBeInTheDocument()
     })
 
-    it('should handle meeting completion', async () => {
+    it('should handle meeting completion', () => {
         // Just make sure the component renders without errors
         render(
             <MeetingProvider>
@@ -85,7 +85,7 @@ describe('Meeting Integration Tests', () => {
         expect(screen.getByText('Meeting Timer')).toBeInTheDocument()
     })
 
-    it('should handle URL state restoration', async () => {
+    it('should handle URL state restoration', () => {
         // Create a URL with meeting state
         const startTime = new Date(now.getTime() + 3600000) // 1 hour from now
         const endTime = new Date(now.getTime() + 7200000)   // 2 hours from now
@@ -125,7 +125,7 @@ describe('Meeting Integration Tests', () => {
         })
     })
 
-    it('should handle audio notifications', async () => {
+    it('should handle audio notifications', () => {
         render(
             <MeetingProvider>
                 <TimerScreen/>
@@ -147,7 +147,7 @@ describe('Meeting Integration Tests', () => {
         // This would trigger error sound
     })
 
-    it('should handle browser tab focus/blur', async () => {
+    it('should handle browser tab focus/blur', () => {
         render(
             <MeetingProvider>
                 <TimerScreen/>
@@ -169,7 +169,7 @@ describe('Meeting Integration Tests', () => {
         // Audio context should handle tab visibility changes properly
     })
 
-    it('should handle component unmount cleanup', async () => {
+    it('should handle component unmount cleanup', () => {
         // Just make sure the component renders without errors
         render(
             <MeetingProvider>
