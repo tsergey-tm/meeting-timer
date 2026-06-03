@@ -1,7 +1,7 @@
 ---
 description: Reviews React + TypeScript code quality and logs session results to CHANGELOG_AI.md.
 mode: subagent
-model: anthropic/claude-3-5-sonnet-20241022
+model: llama.cpp
 temperature: 0.1
 permission:
   edit: allow
