@@ -1,4 +1,4 @@
-import {calculatePlannedStageTimes, type Stage} from "../utils/stageUtils.ts";
+import {calculateDisplayedStageTimes, calculatePlannedStageTimes, type Stage} from "../utils/stageUtils.ts";
 import {createContext} from "react";
 
 export type MeetingState = {
@@ -8,6 +8,18 @@ export type MeetingState = {
     currentStageIndex: number
     meetingStatus: 'not_started' | 'in_progress' | 'completed'
     lastUpdateTime: Date | null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any
+}
+
+export type MeetingContextType = {
+    state: MeetingState
+    dispatch: (action: Action) => void
+    calculateTimeRemaining: () => { stageRemaining: number; totalRemaining: number }
+    calculateStageTimeRemaining: () => { stageRemaining: number; totalRemaining: number }
+    validateMeeting: () => { isValid: boolean; errors: string[] }
+    getTotalStageDuration: () => number
+    getMeetingDuration: () => number
 }
 
 export type Action =
@@ -21,16 +33,6 @@ export type Action =
     | { type: 'START_MEETING' }
     | { type: 'UPDATE_STAGES_DISPLAYED_TIMES'; payload: Stage[] }
 
-export type MeetingContextType = {
-    state: MeetingState
-    dispatch: (action: Action) => void
-    calculateTimeRemaining: () => { stageRemaining: number; totalRemaining: number }
-    calculateStageTimeRemaining: () => { stageRemaining: number; totalRemaining: number }
-    validateMeeting: () => { isValid: boolean; errors: string[] }
-    getTotalStageDuration: () => number
-    getMeetingDuration: () => number
-}
-
 export const initialState: MeetingState = {
     startTime: null,
     endTime: null,
@@ -38,60 +40,6 @@ export const initialState: MeetingState = {
     currentStageIndex: -1,
     meetingStatus: 'not_started',
     lastUpdateTime: null,
-}
-
-function calculateDisplayedStageTimes(state: MeetingState): MeetingState {
-
-    if (state.startTime === null) {
-        return state;
-    }
-
-    const stages = [...state.stages];
-
-    const now = new Date();
-
-    let calculatedStartTime: Date;
-
-    // First: we need calculate start time for first stage
-    if (state.currentStageIndex < 0) {
-        // Not started
-        if (state.startTime < now) {
-            // We were late starting the meeting
-            calculatedStartTime = now;
-        } else {
-            // It's not time to start yet.
-            calculatedStartTime = state.startTime;
-        }
-    } else {
-        // The meeting has started
-        calculatedStartTime = stages[0].actualStartTime!;
-    }
-
-
-    for (let i = 0; i < stages.length; i++) {
-        const stage = stages[i];
-        if (stage.actualStartTime === null) {
-            // Stage not started: use calculated start time
-            stage.displayedStartTime = new Date(
-                Math.max(
-                    now.getTime(),
-                    calculatedStartTime.getTime(),
-                    stage.plannedStartTime!.getTime()
-                )
-            );
-            calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60000);
-        } else {
-            // Stage started: overwrite calculated start time by actual start time
-            stage.displayedStartTime = stage.actualStartTime;
-            if (stage.actualEndTime === null) {
-                calculatedStartTime = new Date(stage.actualStartTime.getTime() + stage.duration * 60000);
-            } else {
-                calculatedStartTime = stage.actualEndTime;
-            }
-        }
-    }
-
-    return {...state, stages: stages};
 }
 
 export function reducer(state: MeetingState, action: Action): MeetingState {
@@ -147,16 +95,17 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
             }
 
         case 'MARK_STAGE_COMPLETED': {
-            state.stages[state.currentStageIndex].actualEndTime = now
+            const newState = {...state}
+            newState.stages[newState.currentStageIndex].actualEndTime = now
             const newCurrentStageIndex = action.payload + 1
-            if (newCurrentStageIndex < state.stages.length) {
-                state.stages[newCurrentStageIndex].actualStartTime = now
+            if (newCurrentStageIndex < newState.stages.length) {
+                newState.stages[newCurrentStageIndex].actualStartTime = now
             }
 
             return calculateDisplayedStageTimes({
-                ...state,
+                ...newState,
                 currentStageIndex: newCurrentStageIndex,
-                meetingStatus: newCurrentStageIndex >= state.stages.length ? 'completed' : 'in_progress'
+                meetingStatus: newCurrentStageIndex >= newState.stages.length ? 'completed' : 'in_progress'
             })
         }
 

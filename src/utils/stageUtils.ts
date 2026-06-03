@@ -22,3 +22,71 @@ export const calculatePlannedStageTimes = (stages: Stage[], startTime: Date): St
     })
 }
 
+export function calculateDisplayedStageTimes(state: {
+    startTime: Date | null,
+    stages: Stage[],
+    currentStageIndex: number,
+    meetingStatus: 'not_started' | 'in_progress' | 'completed',
+    endTime: Date | null,
+    lastUpdateTime: Date | null
+}): {
+    startTime: Date | null,
+    stages: Stage[],
+    currentStageIndex: number,
+    meetingStatus: 'not_started' | 'in_progress' | 'completed',
+    endTime: Date | null,
+    lastUpdateTime: Date | null
+} {
+
+    if (state.startTime === null) {
+        return state;
+    }
+
+    const stages = [...state.stages];
+
+    const now = new Date();
+
+    let calculatedStartTime: Date;
+
+    // First: we need calculate start time for first stage
+    if (state.currentStageIndex < 0) {
+        // Not started
+        if (state.startTime < now) {
+            // We were late starting the meeting
+            calculatedStartTime = now;
+        } else {
+            // It's not time to start yet.
+            calculatedStartTime = state.startTime;
+        }
+    } else {
+        // The meeting has started
+        calculatedStartTime = stages[0].actualStartTime!;
+    }
+
+
+    for (let i = 0; i < stages.length; i++) {
+        const stage = stages[i];
+        if (stage.actualStartTime === null) {
+            // Stage not started: use calculated start time
+            stage.displayedStartTime = new Date(
+                Math.max(
+                    now.getTime(),
+                    calculatedStartTime.getTime(),
+                    stage.plannedStartTime ? stage.plannedStartTime.getTime() : calculatedStartTime.getTime()
+                )
+            );
+            calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60000);
+        } else {
+            // Stage started: overwrite calculated start time by actual start time
+            stage.displayedStartTime = stage.actualStartTime;
+            if (stage.actualEndTime === null) {
+                calculatedStartTime = new Date(stage.actualStartTime.getTime() + stage.duration * 60000);
+            } else {
+                calculatedStartTime = stage.actualEndTime;
+            }
+        }
+    }
+
+    return {...state, stages: stages};
+}
+
