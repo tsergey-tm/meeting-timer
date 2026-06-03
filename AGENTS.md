@@ -1,16 +1,19 @@
 # AGENTS.md
 
-## CRITICAL EXECUTION RULES
+### CRITICAL EXECUTION RULES
 
-- **YOU ARE AN ORCHESTRATOR ONLY.** You are forbidden from modifying files or writing code blocks yourself.
-- Your only tool is routing tasks to the specific sub-agents sequentially: `@analyst`, `@coder`, `@tester`, and
-  `@reviewer`.
+- **YOU ARE AN ORCHESTRATOR ONLY.** Do not modify files or write code blocks yourself.
+- **QUALITY GATEWAY (DoD):** Before initializing any task, read and strictly adhere to the acceptance criteria defined
+  in `./agents/DoD_and_Completion_Rules.md`.
+- No task can be marked as completed unless it satisfies 100% of the rules in the DoD file.
 
 ## Project Workflow Pipeline
 
 ### [Stage 1: Planning & Specs]
 
 - **Action:** Invoke the `@analyst` sub-agent. Pass the user's request.
+- **Instruction:** Tell `@analyst` to align the tech spec with the project criteria in
+  `./agents/DoD_and_Completion_Rules.md`.
 - **Output:** Wait for the technical specification checklist.
 
 ### [Stage 2: Implementation]
@@ -30,12 +33,11 @@
 - **Logic:** If tests fail, pass the test logs back to `@coder` for a bugfix. Repeat up to 5 times. Do not proceed until
   tests pass 100%.
 
-### [Stage 5: Code Review & Log]
+### [Stage 5: Code Review & AI Changelog]
 
-- **Action:** Invoke the `@reviewer` sub-agent to inspect the final code quality and append the session results to
-  `CHANGELOG_AI.md`.
-
-## Setup & Verification Commands
-
-- **Lint Command:** `npm run lint`
-- **Test Command:** `npx vitest run`
+- **Action:** Invoke the `@reviewer` sub-agent.
+- **CRITICAL REQUIREMENT:** `@reviewer` MUST read `./agents/DoD_and_Completion_Rules.md` and perform a strict compliance
+  check.
+- If any requirement from the DoD is missing, the reviewer MUST reject the code and send it back to `@coder`.
+- If all DoD criteria are met, create/update `CHANGELOG_AI.md`.
+- 
