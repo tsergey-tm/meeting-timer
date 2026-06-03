@@ -5,6 +5,7 @@ temperature: 0.1
 permission:
   edit: allow
   bash: allow
+  todowrite: allow
 ---
 
 You are an Automated QA Engineer specializing in React (TypeScript) and Vitest.

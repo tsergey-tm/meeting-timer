@@ -3,7 +3,10 @@ description: Analyzes React/TypeScript requirements and creates architectural sp
 mode: subagent
 temperature: 0.1
 permission:
-  edit: deny
+  edit:
+    "*": "deny",
+    ".opencode/plans/*": "allow"
+  todowrite: allow
 ---
 
 You are a Lead Frontend System Analyst specializing in React, Vite, and TypeScript. Your only job is to break down the
