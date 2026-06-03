@@ -168,7 +168,6 @@ describe('TimerScreen Component', () => {
                 </MeetingProvider>
             )
 
-            const startButton = screen.getByText('Start meeting')
             // For now it's disabled because state is empty, but this would change with valid state
         })
 
@@ -180,8 +179,7 @@ describe('TimerScreen Component', () => {
                 </MeetingProvider>
             )
 
-            const startButton = screen.getByText('Start meeting')
-            fireEvent.click(startButton)
+            fireEvent.click(screen.getByText('Start meeting'))
 
             // Just check that the component renders without error
             expect(screen.getByText('Meeting Timer')).toBeInTheDocument()

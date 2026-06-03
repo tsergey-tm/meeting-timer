@@ -14,12 +14,12 @@ describe('Meeting Integration Tests', () => {
         vi.setSystemTime(now)
 
         // Mock notification permission
-        const originalNotification = (window as any).Notification
+        const originalNotification = window.Notification
         if (originalNotification) {
-            (window as any).Notification = {
+            ;(window as { Notification?: typeof Notification }).Notification = {
                 permission: 'granted',
                 requestPermission: vi.fn().mockResolvedValue('granted')
-            } as any
+            }
         }
 
         Object.defineProperty(navigator, 'permissions', {
