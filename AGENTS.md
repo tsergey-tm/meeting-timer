@@ -1,9 +1,16 @@
 # AGENTS.md
 
+## CRITICAL EXECUTION RULES (READ THIS FIRST)
+
+- **DO NOT WRITE CODE OR SOLUTION DIRECTLY.** As the main orchestrator, your ONLY job is to delegate tasks to sub-agents
+  sequentially.
+- **NEVER** start implementation (`build` mode) yourself.
+- If you generate code directly instead of calling `@analyst`, you are failing the system constraint.
+
 ## Project Workflow Pipeline
 
-CRITICAL: Every development request MUST go through a multi-agent pipeline. Do not write code directly without passing
-all stages in order.
+You must execute the following 5 stages in strict, non-linear order. Wait for each sub-agent to finish before calling
+the next one.
 
 ### [Stage 1: Planning & Specs]
 

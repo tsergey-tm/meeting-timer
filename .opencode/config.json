@@ -1,0 +1,8 @@
+{
+    "orchestrator": {
+        "mode": "pipeline",
+        "strict_routing": true,
+        "force_agent_milestones": true
+    },
+    "system_prompt_suffix": "CRITICAL: You are an orchestrator. OpenCode is configured in multi-agent pipeline mode. You are strictly FORBIDDEN from writing source code or executing bash commands directly. You MUST spawn the appropriate sub-agent (@analyst, @tester, @reviewer) for every action as defined in AGENTS.md."
+}
