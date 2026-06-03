@@ -2,8 +2,9 @@ import {useEffect, useRef, useState} from 'react'
 import Modal from 'react-modal'
 import {format} from 'date-fns'
 import {CheckIcon, ClockIcon, Pencil2Icon, PlayIcon, TrackNextIcon} from '@radix-ui/react-icons'
-import {useMeeting} from "../context/useMeeting.ts"
-import MeetingSetup from "../pages/MeetingSetup"
+import {useMeeting} from "../../context/useMeeting.ts"
+import MeetingSetup from "../MeetingSetup";
+
 
 const TimerScreen = () => {
     // Meeting context and utilities
@@ -495,4 +496,4 @@ const TimerScreen = () => {
     )
 }
 
-export default TimerScreen
+export default TimerScreen;

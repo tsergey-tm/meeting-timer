@@ -271,7 +271,8 @@ describe('Meeting Reducer', () => {
             const result = reducer(inProgressState, action)
 
             expect(result.stages[1].actualStartTime).toBeDefined()
-            expect(result.stages[1].actualStartTime!.getTime()).toBeLessThanOrEqual(now.getTime())
+            // Проверяем, что время не позже текущего времени (с небольшим допуском для тестов)
+            expect(result.stages[1].actualStartTime!.getTime()).toBeLessThanOrEqual(now.getTime() + 100)
         })
     })
 

@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useState} from 'react'
 import {format} from 'date-fns'
 import {CalendarIcon, ClockIcon, Pencil2Icon, PlusIcon, TrashIcon} from '@radix-ui/react-icons'
-import {useMeeting} from "../context/useMeeting.ts";
+import {useMeeting} from "../../context/useMeeting.ts";
 
 interface MeetingSetupProps {
     onClose?: () => void
@@ -269,4 +269,4 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
     )
 }
 
-export default MeetingSetup
+export default MeetingSetup;
