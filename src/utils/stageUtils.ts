@@ -1,3 +1,5 @@
+import type {MeetingState} from "../context/MeetingContext/MeetingContext.types.ts";
+
 export type Stage = {
     name: string
     duration: number // in minutes
@@ -22,21 +24,7 @@ export const calculatePlannedStageTimes = (stages: Stage[], startTime: Date): St
     })
 }
 
-export function calculateDisplayedStageTimes(state: {
-    startTime: Date | null,
-    stages: Stage[],
-    currentStageIndex: number,
-    meetingStatus: 'not_started' | 'in_progress' | 'completed',
-    endTime: Date | null,
-    lastUpdateTime: Date | null
-}): {
-    startTime: Date | null,
-    stages: Stage[],
-    currentStageIndex: number,
-    meetingStatus: 'not_started' | 'in_progress' | 'completed',
-    endTime: Date | null,
-    lastUpdateTime: Date | null
-} {
+export function calculateDisplayedStageTimes(state: MeetingState): MeetingState {
 
     if (state.startTime === null) {
         return state;

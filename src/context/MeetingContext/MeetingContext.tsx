@@ -4,6 +4,83 @@ import {type Stage} from '../../utils/stageUtils.ts'
 import {initialState, MeetingContext, type MeetingState} from "./MeetingContext.types.ts";
 import {reducer} from "./reducer.ts";
 
+const makeStateFromHash = (hash: string): MeetingState | undefined => {
+    const urlParams = new URLSearchParams(hash.substring(2)) // Remove '#?'
+    const startTimeStr = urlParams.get('s')
+    const endTimeStr = urlParams.get('e')
+
+    if (!startTimeStr || !endTimeStr) return
+
+    // Parse time strings in HH:mm format and create Date objects for today
+    const [startHours, startMinutes] = startTimeStr.split(':').map(Number)
+    const [endHours, endMinutes] = endTimeStr.split(':').map(Number)
+
+    if (isNaN(startHours) || isNaN(startMinutes) || isNaN(endHours) || isNaN(endMinutes)) {
+        return
+    }
+
+    const today = new Date()
+    const startTime = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        startHours,
+        startMinutes
+    )
+    const endTime = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        endHours,
+        endMinutes
+    )
+
+    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) return
+
+    // If end time is before start time, assume it's on the next day
+    if (isBefore(endTime, startTime)) {
+        endTime.setDate(endTime.getDate() + 1)
+    }
+
+    // Parse stages from n and d parameters
+    const stages: Stage[] = []
+    let index = 0
+    while (true) {
+        const nameParam = `n${index}`
+        const durationParam = `d${index}`
+
+        const nameValue = urlParams.get(nameParam)
+        const durationValue = urlParams.get(durationParam)
+
+        if (nameValue === null || durationValue === null) {
+            break // No more stages
+        }
+
+        const duration = parseInt(durationValue)
+        if (!isNaN(duration) && duration > 0) {
+            stages.push({
+                name: decodeURIComponent(nameValue),
+                duration: duration,
+                plannedStartTime: null,
+                actualStartTime: null,
+                actualEndTime: null,
+                displayedStartTime: null
+            })
+        }
+
+        index++
+    }
+
+    // Create new state from URL
+    return {
+        startTime: startTime,
+        endTime: endTime,
+        stages: stages,
+        currentStageIndex: -1,
+        meetingStatus: 'not_started',
+        lastUpdateTime: null
+    };
+}
 
 export const MeetingProvider = ({children}: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -16,81 +93,9 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
             if (!hash || !hash.startsWith('#?')) return
 
             try {
-                const urlParams = new URLSearchParams(hash.substring(2)) // Remove '#?'
-                const startTimeStr = urlParams.get('s')
-                const endTimeStr = urlParams.get('e')
+                const newState: MeetingState | undefined = makeStateFromHash(hash);
 
-                if (!startTimeStr || !endTimeStr) return
-
-                // Parse time strings in HH:mm format and create Date objects for today
-                const [startHours, startMinutes] = startTimeStr.split(':').map(Number)
-                const [endHours, endMinutes] = endTimeStr.split(':').map(Number)
-
-                if (isNaN(startHours) || isNaN(startMinutes) || isNaN(endHours) || isNaN(endMinutes)) {
-                    return
-                }
-
-                const today = new Date()
-                const startTime = new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate(),
-                    startHours,
-                    startMinutes
-                )
-                const endTime = new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate(),
-                    endHours,
-                    endMinutes
-                )
-
-                if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) return
-
-                // If end time is before start time, assume it's on the next day
-                if (isBefore(endTime, startTime)) {
-                    endTime.setDate(endTime.getDate() + 1)
-                }
-
-                // Parse stages from n and d parameters
-                const stages: Stage[] = []
-                let index = 0
-                while (true) {
-                    const nameParam = `n${index}`
-                    const durationParam = `d${index}`
-
-                    const nameValue = urlParams.get(nameParam)
-                    const durationValue = urlParams.get(durationParam)
-
-                    if (nameValue === null || durationValue === null) {
-                        break // No more stages
-                    }
-
-                    const duration = parseInt(durationValue)
-                    if (!isNaN(duration) && duration > 0) {
-                        stages.push({
-                            name: decodeURIComponent(nameValue),
-                            duration: duration,
-                            plannedStartTime: null,
-                            actualStartTime: null,
-                            actualEndTime: null,
-                            displayedStartTime: null
-                        })
-                    }
-
-                    index++
-                }
-
-                // Create new state from URL
-                const newState: MeetingState = {
-                    startTime: startTime,
-                    endTime: endTime,
-                    stages: stages,
-                    currentStageIndex: -1,
-                    meetingStatus: 'not_started',
-                    lastUpdateTime: null
-                }
+                if (!newState) return
 
                 dispatch({type: 'RESET_STATE', payload: newState})
 
@@ -140,7 +145,7 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
         const timeoutId = setTimeout(saveToUrl, 100)
 
         return () => clearTimeout(timeoutId)
-    }, [state.startTime, state.endTime, state.stages, state.currentStageIndex, state.meetingStatus])
+    }, [state.startTime, state.endTime, state.stages])
 
     const calculateTimeRemaining = () => {
         if (!state.startTime || !state.endTime) {
