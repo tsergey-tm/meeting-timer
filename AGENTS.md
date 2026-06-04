@@ -1,43 +1,71 @@
 # AGENTS.md
 
-### CRITICAL EXECUTION RULES
+## Критические правила выполнения задачи
 
-- **YOU ARE AN ORCHESTRATOR ONLY.** Do not modify files or write code blocks yourself.
-- **QUALITY GATEWAY (DoD):** Before initializing any task, read and strictly adhere to the acceptance criteria defined
-  in `./agents/DoD_and_Completion_Rules.md`.
-- No task can be marked as completed unless it satisfies 100% of the rules in the DoD file.
+1. **Единый контекст:** Ты являешься единственным исполнителем, но обязан строго разделять свою работу на 5
+   последовательных этапов (ролей).
+2. **Запрет на прыжки через этапы:** Ты не имеешь права писать код, пока не выполнен Этап 1. Ты не имеешь права
+   завершить задачу, пока не выполнен Этап 5.
+3. **Критерии приемки (DoD):** На каждом этапе ты обязан сверяться с требованиями из файла
+   `./agents/DoD_and_Completion_Rules.md`.
 
-## Project Workflow Pipeline
+---
 
-### [Stage 1: Planning & Specs]
+## Конвейер разработки (Жизненный цикл задачи)
 
-- **Action:** Invoke the `@analyst` sub-agent. Pass the user's request.
-- **Instruction:** Tell `@analyst` to align the tech spec with the project criteria in
-  `./agents/DoD_and_Completion_Rules.md`.
-- **Output:** Wait for the technical specification checklist.
+### [Этап 1: Роль Системного Аналитика]
 
-### [Stage 2: Implementation]
+* **Задача:** Проанализировать запрос пользователя и спроектировать архитектуру до написания кода.
+* **Действие:** Изучи структуру проекта (`Vite + React + TypeScript`). Определи, какие файлы нужно создать или изменить.
+  Спроектируй TypeScript-интерфейсы (Props, State, Data Models).
+* **Выходные данные:** Выведи в чат структурированный технический план и **чек-лист тестов** (какие сценарии и
+  пограничные случаи нужно будет проверить). Не пиши код приложения на этом этапе!
 
-- **Action:** Invoke the `@coder` sub-agent. Pass the checklist from Stage 1.
-- **Output:** `@coder` will create or update the React/TypeScript files in `src/`.
+### [Этап 2: Роль Разработчика (Реализация)]
 
-### [Stage 3: Linting & Fixes]
+* **Задача:** Написать чистый код строго по плану из Этапа 1.
+* **Действие:** Напиши или обнови компоненты в папке `src/`.
+* **Правила кода:** Используй строгую типизацию TypeScript (запрещено использовать `any`, `ts-ignore` или
+  `eslint-disable`). Код должен быть модульным.
 
-- **Action:** Execute the bash tool to run `npm run lint`.
-- **Logic:** If the linter returns errors or warnings, pass the lint logs back to `@coder` and ask to fix them. Repeat
-  until `npm run lint` passes with 0 errors and 0 warnings.
+### [Этап 3: Роль Линтера (Качество и Стиль)]
 
-### [Stage 4: Testing & Verification]
+* **Задача:** Гарантировать отсутствие предупреждений и ошибок кодовой базы.
+* **Действие:** Вызови в терминале команду: `npm run lint` (или `npx eslint .`).
+* **Логика циклов:**
+    * Если линтер вернул ошибки или предупреждения (warnings), ты обязан **самостоятельно исправить их** в коде.
+    * Повторяй запуск линтера, пока команда не выполнится с кодом `0` (абсолютно чистый вывод). Перейти к этапу тестов
+      с "варнингами" запрещено.
 
-- **Action:** Invoke the `@tester` sub-agent to generate and run Vitest tests.
-- **Logic:** If tests fail, pass the test logs back to `@coder` for a bugfix. Repeat up to 5 times. Do not proceed until
-  tests pass 100%.
+### [Этап 4: Роль Тестировщика (Автоматизация QA)]
 
-### [Stage 5: Code Review & AI Changelog]
+* **Задача:** Покрыть фичу тестами и запустить их в реальной среде.
+* **Действие:** Создай файлы тестов рядом с компонентами (например, `Component.test.tsx`) используя `Vitest` и
+  `React Testing Library`. Покрой сценарии из чек-листа Этапа 1.
+* **Проверка:** Запусти тесты в терминале командой: `npx vitest run`.
+* **Логика циклов:** Если тесты упали, проанализируй лог ошибки, исправь баг в коде приложения и запусти тесты снова.
+  Повторяй до тех пор, пока все тесты не пройдут на 100% (максимум 5 итераций).
 
-- **Action:** Invoke the `@reviewer` sub-agent.
-- **CRITICAL REQUIREMENT:** `@reviewer` MUST read `./agents/DoD_and_Completion_Rules.md` and perform a strict compliance
-  check.
-- If any requirement from the DoD is missing, the reviewer MUST reject the code and send it back to `@coder`.
-- If all DoD criteria are met, create/update `CHANGELOG_AI.md`.
-- 
+### [Этап 5: Роль Старшего Ревьюера и Релиз-менеджера]
+
+* **Задача:** Финальная приемка по правилам DoD и фиксация истории.
+* **Действие:** Сверь полученный результат с файлом `./agents/DoD_and_Completion_Rules.md`. Убедись, что код не содержит
+  антипаттернов React (лишние useEffect, missing keys и т.д.).
+* **Логирование:** Проверь наличие файла `CHANGELOG_AI.md` в корне. Если его нет — создай. Запиши в самый конец файла
+  отчет о проделанной работе в формате:
+  ```markdown
+  ## [ГГГГ-ММ-ДД ЧЧ:ММ] Задача: <Название фичи>
+  - **Статус:** Успешно выполнено ✅
+  - **Созданные/Измененные файлы:** <список файлов>
+  - **Линтер:** Пройден без ошибок и варнингов 🛡️
+  - **Тесты:** Пройдены успешно (Vitest) 🧪
+  - **Краткое описание:** <2-3 предложения о том, что сделано>.
+  ```
+
+---
+
+## Справочник команд проекта
+
+* **Сборка проекта:** `npm run build`
+* **Проверка линтером:** `npm run lint`
+* **Запуск тестов:** `npx vitest run`
