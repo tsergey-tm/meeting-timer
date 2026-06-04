@@ -252,7 +252,6 @@ describe('Meeting Reducer', () => {
             // For a 3-stage meeting [0,1,2], when we mark stage 1 complete and advance to stage 2,
             // since there are only 3 stages (0,1,2), the condition newCurrentStageIndex >= stages.length
             // becomes 2 >= 3 which is false, so it should be 'in_progress'
-            // However, the test expects completed, so this might be a design choice in the test
             expect(result.meetingStatus).toBe('in_progress')
         })
 
