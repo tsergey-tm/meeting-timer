@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import Modal from 'react-modal'
-import {ClockIcon, Pencil2Icon, QuestionMarkCircledIcon} from '@radix-ui/react-icons'
+import {Pencil2Icon, QuestionMarkCircledIcon} from '@radix-ui/react-icons'
 import {useMeeting} from "../../context/MeetingContext/useMeeting.ts"
 import MeetingSetup from "../MeetingSetup";
 import TimerDisplay from './components/TimerDisplay.tsx'
@@ -8,6 +8,7 @@ import StageList from './components/StageList.tsx'
 import NotificationModal from './components/NotificationModal.tsx'
 import AudioControls from './components/AudioControls.tsx'
 import HelpModal from './components/HelpModal.tsx'
+import {AppIcon} from "../../assets";
 
 const TimerScreen = () => {
     // Meeting context and utilities
@@ -218,7 +219,7 @@ const TimerScreen = () => {
                     <div className="p-6">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
-                                <ClockIcon className="h-8 w-8 text-blue-600 mr-3"/>
+                                <AppIcon className="h-8 w-8 text-blue-600 mr-3"/>
                                 <h1 className="text-2xl font-bold text-gray-900">Meeting Timer</h1>
                             </div>
                             <div className="flex space-x-2">

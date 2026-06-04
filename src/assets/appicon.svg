@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        viewBox="0 0 512 512"
+        width="100%"
+        height="100%"
+        version="1.1"
+        id="svg4"
+        xmlns="http://www.w3.org/2000/svg"
+>
+    <defs
+            id="defs4"/>
+    <!-- Фон / Скругленный квадрат календаря -->
+    <rect
+            x="32"
+            y="64"
+            width="448"
+            height="416"
+            rx="64"
+            fill="#F8FAFC"
+            stroke="#0EA5E9"
+            stroke-width="24"
+            id="rect1"/>
+    <!-- Верхняя полоса календаря (отрывной блок) -->
+    <path
+            d="M32 128 C32 93 61 64 96 64 H416 C451 64 480 93 480 128 V160 H32 Z"
+            fill="#0EA5E9"
+            id="path1"/>
+    <!-- Кольца календаря -->
+    <rect
+            x="128"
+            y="24"
+            width="32"
+            height="80"
+            rx="16"
+            fill="#64748B"
+            id="rect2"/>
+    <rect
+            x="352"
+            y="24"
+            width="32"
+            height="80"
+            rx="16"
+            fill="#64748B"
+            id="rect3"/>
+    <!-- Циферблат часов (Основной круг) -->
+    <circle
+            cx="256"
+            cy="310"
+            r="110"
+            fill="#FFFFFF"
+            stroke="#0F172A"
+            stroke-width="20"
+            id="circle3"/>
+    <!-- Индикатор приближения этапа (акцентный сектор времени) -->
+    <path
+            d="M256 200 A110 110 0 0 1 366 310 L256 310 Z"
+            fill="#F43F5E"
+            opacity="0.2"
+            id="path3"/>
+    <!-- Стрелки часов -->
+    <!-- Часовая стрелка (указывает на деление) -->
+    <line
+            x1="256"
+            y1="310"
+            x2="256"
+            y2="240"
+            stroke="#0F172A"
+            stroke-width="16"
+            stroke-linecap="round"
+            id="line3"/>
+    <!-- Минутная стрелка (показывает приближение отсечки) -->
+    <line
+            x1="256"
+            y1="310"
+            x2="336"
+            y2="310"
+            stroke="#F43F5E"
+            stroke-width="12"
+            stroke-linecap="round"
+            id="line4"/>
+    <!-- Центральная точка -->
+    <circle
+            cx="256"
+            cy="310"
+            r="16"
+            fill="#0F172A"
+            id="circle4"/>
+</svg>
