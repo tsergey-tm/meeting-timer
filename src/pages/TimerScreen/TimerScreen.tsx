@@ -1,12 +1,13 @@
 import {useEffect, useRef, useState} from 'react'
 import Modal from 'react-modal'
-import {ClockIcon, Pencil2Icon} from '@radix-ui/react-icons'
+import {ClockIcon, Pencil2Icon, QuestionMarkCircledIcon} from '@radix-ui/react-icons'
 import {useMeeting} from "../../context/MeetingContext/useMeeting.ts"
 import MeetingSetup from "../MeetingSetup";
 import TimerDisplay from './components/TimerDisplay.tsx'
 import StageList from './components/StageList.tsx'
 import NotificationModal from './components/NotificationModal.tsx'
 import AudioControls from './components/AudioControls.tsx'
+import HelpModal from './components/HelpModal.tsx'
 
 const TimerScreen = () => {
     // Meeting context and utilities
@@ -25,6 +26,8 @@ const TimerScreen = () => {
     const [warnNotified, setWarnNotified] = useState<boolean>(false)
     // Tracks which error sounds have already been played (to prevent duplicates)
     const [errorNotified, setErrorNotified] = useState<boolean>(false)
+    // Controls the help modal visibility
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false)
 
     // Reference to the Web Audio API context
     const audioContextRef = useRef<AudioContext | null>(null)
@@ -218,13 +221,22 @@ const TimerScreen = () => {
                                 <ClockIcon className="h-8 w-8 text-blue-600 mr-3"/>
                                 <h1 className="text-2xl font-bold text-gray-900">Meeting Timer</h1>
                             </div>
-                            <button
-                                onClick={() => setIsModalOpen(true)}
-                                className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
-                                aria-label="Configure meeting"
-                            >
-                                <Pencil2Icon className="h-6 w-6"/>
-                            </button>
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => setIsHelpModalOpen(true)}
+                                    className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
+                                    aria-label="Help"
+                                >
+                                    <QuestionMarkCircledIcon className="h-6 w-6"/>
+                                </button>
+                                <button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
+                                    aria-label="Configure meeting"
+                                >
+                                    <Pencil2Icon className="h-6 w-6"/>
+                                </button>
+                            </div>
                         </div>
 
                         <div className="space-y-6">
@@ -273,6 +285,11 @@ const TimerScreen = () => {
             >
                 <MeetingSetup onClose={() => setIsModalOpen(false)}/>
             </Modal>
+
+            <HelpModal
+                isOpen={isHelpModalOpen}
+                onRequestClose={() => setIsHelpModalOpen(false)}
+            />
         </>
     )
 }
