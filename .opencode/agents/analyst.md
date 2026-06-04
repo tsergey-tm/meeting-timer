@@ -6,6 +6,9 @@ permission:
   edit:
     "*": "deny",
     ".opencode/plans/*": "allow"
+  write:
+    "*": "deny",
+    ".opencode/plans/*": "allow"
   todowrite: allow
 ---
 
