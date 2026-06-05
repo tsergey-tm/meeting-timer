@@ -1,0 +1,26 @@
+{
+    "translation": {
+        "app": {
+            "title": "Meeting Timer"
+        },
+        "help": {
+            "title": "Meeting Timer Help"
+        },
+        "notification": {
+            "title": "Notification Permission"
+        },
+        "meeting": {
+            "stages": {
+                "title": "Meeting Stages"
+            }
+        },
+        "timer": {
+            "current": {
+                "caption": "Current Time"
+            }
+        },
+        "setup": {
+            "title": "Meeting Timer Setup"
+        }
+    }
+}

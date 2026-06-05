@@ -9,6 +9,7 @@ import NotificationModal from './components/NotificationModal.tsx'
 import AudioControls from './components/AudioControls.tsx'
 import HelpModal from './components/HelpModal.tsx'
 import {AppIcon} from "../../assets";
+import {useTranslation} from 'react-i18next';
 
 const TimerScreen = () => {
     // Meeting context and utilities
@@ -29,6 +30,7 @@ const TimerScreen = () => {
     const [errorNotified, setErrorNotified] = useState<boolean>(false)
     // Controls the help modal visibility
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false)
+    const {t} = useTranslation();
 
     // Reference to the Web Audio API context
     const audioContextRef = useRef<AudioContext | null>(null)
@@ -134,7 +136,7 @@ const TimerScreen = () => {
         if (isNotificationSelected) {
             console.log("notifyOneMinute");
             if ('Notification' in window && window.Notification.permission === 'granted') {
-                new Notification('Meeting Timer', {
+                new Notification(t('translation.app.title'), {
                     body: 'One minute left until the meeting stage changes',
                     icon: 'favicon.svg'
                 })
@@ -147,7 +149,7 @@ const TimerScreen = () => {
         setErrorNotified(true);
 
         if (isNotificationSelected && 'Notification' in window && window.Notification.permission === 'granted') {
-            new Notification('Meeting Timer', {
+            new Notification(t('translation.app.title'), {
                 body: "It's time to change the stage of the meeting",
                 icon: 'favicon.svg'
             })
@@ -220,7 +222,7 @@ const TimerScreen = () => {
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
                                 <AppIcon className="h-8 w-8 text-blue-600 mr-3"/>
-                                <h1 className="text-2xl font-bold text-gray-900">Meeting Timer</h1>
+                                <h1 className="text-2xl font-bold text-gray-900">{t('translation.app.title')}</h1>
                             </div>
                             <div className="flex space-x-2">
                                 <button

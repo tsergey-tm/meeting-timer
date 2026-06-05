@@ -1,4 +1,5 @@
 import Modal from 'react-modal'
+import {useTranslation} from 'react-i18next';
 
 interface NotificationModalProps {
     isOpen: boolean
@@ -11,13 +12,15 @@ const NotificationModal = ({
                                onRequestClose,
                                handleNotificationPermission
                            }: NotificationModalProps) => {
+    const {t} = useTranslation();
+
     return (
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             shouldCloseOnOverlayClick={false}
             shouldCloseOnEsc={false}
-            contentLabel="Notification Permission"
+            contentLabel={t("translation.notification.title")}
             style={{
                 overlay: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',

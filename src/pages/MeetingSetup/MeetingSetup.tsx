@@ -3,12 +3,16 @@ import {useState} from 'react'
 import {format} from 'date-fns'
 import {CalendarIcon, ClockIcon, Pencil2Icon, PlusIcon, TrashIcon} from '@radix-ui/react-icons'
 import {useMeeting} from "../../context/MeetingContext/useMeeting.ts";
+import {useTranslation} from "react-i18next";
 
 interface MeetingSetupProps {
     onClose?: () => void
 }
 
 const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
+
+    const {t} = useTranslation();
+
     const {state, dispatch, validateMeeting, getTotalStageDuration, getMeetingDuration} = useMeeting()
     const [startTime, setStartTime] = useState(state.startTime ? format(state.startTime, 'HH:mm') : '')
     const [endTime, setEndTime] = useState(state.endTime ? format(state.endTime, 'HH:mm') : '')
@@ -100,7 +104,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                 <div className="p-6">
                     <div className="flex items-center mb-6">
                         <ClockIcon className="h-8 w-8 text-blue-600 mr-3"/>
-                        <h1 className="text-2xl font-bold text-gray-900">Meeting Timer Setup</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">{t("translation.setup.title")}</h1>
                     </div>
 
                     <div className="space-y-6">

@@ -1,4 +1,5 @@
 import Modal from 'react-modal';
+import {useTranslation} from 'react-i18next';
 
 interface HelpModalProps {
     isOpen: boolean;
@@ -6,13 +7,15 @@ interface HelpModalProps {
 }
 
 const HelpModal = ({isOpen, onRequestClose}: HelpModalProps) => {
+    const {t} = useTranslation();
+
     return (
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             shouldCloseOnOverlayClick={true}
             shouldCloseOnEsc={true}
-            contentLabel="Meeting Timer Help"
+            contentLabel={t("translation.help.title")}
             style={{
                 overlay: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',

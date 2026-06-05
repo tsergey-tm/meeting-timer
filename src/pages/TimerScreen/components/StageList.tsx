@@ -1,5 +1,6 @@
 import {format} from 'date-fns'
 import {CheckIcon, ClockIcon, TrackNextIcon} from '@radix-ui/react-icons'
+import {useTranslation} from 'react-i18next';
 
 interface Stage {
     name: string
@@ -20,9 +21,11 @@ const StageList = ({
                        currentStageIndex,
                        markStageCompleted
                    }: StageListProps) => {
+    const {t} = useTranslation();
+
     return (
         <div className="border-t pt-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Meeting Stages</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">{t("translation.meeting.stages.title")}</h2>
             <div className="space-y-3">
                 {stages.map((stage, index) => {
                     const isCurrent = index === currentStageIndex

@@ -1,6 +1,7 @@
 import {format} from 'date-fns'
 import {ClockIcon} from '@radix-ui/react-icons'
 import {formatTime} from '../../../utils/timeFormatting.ts'
+import {useTranslation} from 'react-i18next';
 
 interface TimerDisplayProps {
     stageRemaining: number
@@ -17,11 +18,13 @@ const TimerDisplay = ({
                           startMeeting,
                           isValid
                       }: TimerDisplayProps) => {
+    const {t} = useTranslation();
+
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-6">
                 <div className="text-center p-4 bg-lime-50 rounded-lg">
-                    <div className="text-sm text-gray-600 mb-2">Current Time</div>
+                    <div className="text-sm text-gray-600 mb-2">{t("translation.timer.current.caption")}</div>
                     <div className="text-2xl font-bold text-gray-900">
                         {format(new Date(), 'HH:mm:ss')}
                     </div>
