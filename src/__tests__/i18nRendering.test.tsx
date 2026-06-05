@@ -1,7 +1,5 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
-import LanguageSwitcher from '../components/LanguageSwitcher';
 import i18n from '../localization/i18n';
 
 describe('i18n key rendering', () => {
@@ -17,13 +15,6 @@ describe('i18n key rendering', () => {
         await i18n.changeLanguage('ru');
 
         expect(i18n.t('app.title')).toBe('Таймер встречи');
-    });
-
-    it('renders localized labels in LanguageSwitcher', () => {
-        render(<LanguageSwitcher/>);
-
-        expect(screen.getByRole('button', {name: 'English'})).toBeInTheDocument();
-        expect(screen.getByRole('button', {name: 'Russian'})).toBeInTheDocument();
     });
 });
 

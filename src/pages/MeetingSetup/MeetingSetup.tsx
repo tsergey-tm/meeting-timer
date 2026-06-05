@@ -109,7 +109,8 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
 
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Meeting Start Time</label>
+                            <label
+                                className="block text-sm font-medium text-gray-700 mb-2">{t('setup.startTime')}</label>
                             <div className="flex items-center">
                                 <CalendarIcon className="h-5 w-5 text-gray-400 mr-2"/>
                                 <input
@@ -122,7 +123,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Meeting End Time</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">{t('setup.endTime')}</label>
                             <div className="flex items-center">
                                 <CalendarIcon className="h-5 w-5 text-gray-400 mr-2"/>
                                 <input
@@ -132,23 +133,26 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                 />
                             </div>
-                            {errors.includes('Meeting end time must be after start time') && (
-                                <p className="mt-1 text-sm text-red-600">End time must be after start time</p>
-                            )}
                         </div>
 
                         <div className="border-t pt-6">
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-lg font-medium text-gray-900">Meeting Stages</h2>
+                                <h2 className="text-lg font-medium text-gray-900">{t('setup.stages')}</h2>
                                 <span className="text-sm text-gray-600">
-                  Total stage time: {totalStageDuration} min{meetingDuration > 0 && `, meeting: ${meetingDuration} min, free time: ${meetingDuration - totalStageDuration}`}
-                </span>
+                                    {(meetingDuration > 0) ?
+                                        t('setup.timesFull', {
+                                            totalStageDuration: totalStageDuration,
+                                            meetingDuration: meetingDuration,
+                                            freeTime: meetingDuration - totalStageDuration
+                                        }) :
+                                        t('setup.timesShort', {totalStageDuration: totalStageDuration})
+                                    }
+                               </span>
                             </div>
 
                             {meetingDuration > 0 && totalStageDuration > meetingDuration && (
                                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-4">
-                                    <p className="text-sm text-yellow-700">⚠️ Total stage time exceeds meeting duration
-                                        by {totalStageDuration - meetingDuration} minutes</p>
+                                    <p className="text-sm text-yellow-700">{t('setup.exceeds', {exceeds: totalStageDuration - meetingDuration})}</p>
                                 </div>
                             )}
 
@@ -158,7 +162,8 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                         <div className="flex-1">
                                             <div className="font-medium text-gray-900">{stage.name}</div>
-                                            <div className="text-sm text-gray-600">{stage.duration} minutes</div>
+                                            <div
+                                                className="text-sm text-gray-600">{t('setup.stage.duration', {duration: stage.duration})}</div>
                                         </div>
                                         {editingStageIndex === index ? (
                                             <div className="flex items-center space-x-2">
@@ -216,7 +221,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                 <div className="flex space-x-2">
                                     <input
                                         type="text"
-                                        placeholder="Stage name"
+                                        placeholder={t('setup.stage.placeholders.name')}
                                         value={newStageName}
                                         onChange={(e) => setNewStageName(e.target.value)}
                                         className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -224,7 +229,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                     />
                                     <input
                                         type="number"
-                                        placeholder="Duration (min)"
+                                        placeholder={t('setup.stage.placeholders.duration')}
                                         value={newStageDuration}
                                         onChange={(e) => setNewStageDuration(e.target.value)}
                                         className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -252,13 +257,13 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                 disabled={!isValid}
                                 className={`flex-1 px-4 py-2 rounded-md text-white font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${isValid ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500' : 'bg-gray-400 cursor-not-allowed focus:ring-gray-500'}`}
                             >
-                                Save Configuration
+                                {t('setup.save')}
                             </button>
                         </div>
 
                         {!isValid && errors.length > 0 && (
                             <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-400">
-                                <h3 className="text-sm font-medium text-red-800">Please fix these errors:</h3>
+                                <h3 className="text-sm font-medium text-red-800">{t('setup.errors')}</h3>
                                 <ul className="mt-2 text-sm text-red-700">
                                     {errors.map((error, index) => (
                                         <li key={index}>{error}</li>

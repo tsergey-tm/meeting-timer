@@ -26,7 +26,22 @@
             "russian": "Russian"
         },
         "setup": {
-            "title": "Meeting Timer Setup"
+            "title": "Meeting Timer Setup",
+            "startTime": "Meeting Start Time",
+            "endTime": "Meeting End Time",
+            "stages": "Meeting Stages",
+            "timesShort": "Total stage time: {{totalStageDuration}} min",
+            "timesFull": "Total stage time: {{totalStageDuration}} min, meeting: {{meetingDuration}} min, free time: {{freeTime}}",
+            "exceeds": "⚠ Total stage time exceeds meeting duration by {{exceeds}} minutes",
+            "stage": {
+                "duration": "{{duration}} min",
+                "placeholders": {
+                    "name": "Stage name",
+                    "duration": "Duration (min)"
+                }
+            },
+            "save": "Save Configuration",
+            "errors": "Please fix these errors:"
         },
         "validation": {
             "startEndRequired": "Meeting start and end times are required",
