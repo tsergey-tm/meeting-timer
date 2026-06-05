@@ -28,7 +28,15 @@
             "close": "Close"
         },
         "notification": {
-            "title": "Notification Permission"
+            "title": "Notification Permission",
+            "modal": {
+                "title": "Notification Settings",
+                "description": "Choose how you would like to receive meeting notifications:",
+                "both": "Both notifications and sounds",
+                "notificationsOnly": "Notifications only",
+                "soundOnly": "Sound only",
+                "noNotifications": "No notifications"
+            }
         },
         "meeting": {
             "stages": {

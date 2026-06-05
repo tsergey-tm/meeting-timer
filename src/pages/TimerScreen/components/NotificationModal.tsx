@@ -40,8 +40,8 @@ const NotificationModal = ({
             }}
         >
             <div className="text-center p-5">
-                <h2 className="text-xl font-bold text-gray-900 pb-1">Notification Settings</h2>
-                <p className="text-gray-600 pb-4">Choose how you would like to receive meeting notifications:</p>
+                <h2 className="text-xl font-bold text-gray-900 pb-1">{t('notification.modal.title')}</h2>
+                <p className="text-gray-600 pb-4">{t('notification.modal.description')}</p>
                 <div className="space-y-3">
                     <button
                         onClick={() => {
@@ -49,7 +49,7 @@ const NotificationModal = ({
                         }}
                         className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                     >
-                        Both notifications and sounds
+                        {t('notification.modal.both')}
                     </button>
                     <button
                         onClick={() => {
@@ -57,7 +57,7 @@ const NotificationModal = ({
                         }}
                         className="w-full px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                     >
-                        Notifications only
+                        {t('notification.modal.notificationsOnly')}
                     </button>
                     <button
                         onClick={() => {
@@ -65,7 +65,7 @@ const NotificationModal = ({
                         }}
                         className="w-full px-6 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
                     >
-                        Sound only
+                        {t('notification.modal.soundOnly')}
                     </button>
                     <button
                         onClick={() => {
@@ -73,7 +73,7 @@ const NotificationModal = ({
                         }}
                         className="w-full px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium"
                     >
-                        No notifications
+                        {t('notification.modal.noNotifications')}
                     </button>
                 </div>
             </div>
