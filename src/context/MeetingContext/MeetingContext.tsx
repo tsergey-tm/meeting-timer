@@ -3,6 +3,7 @@ import {differenceInMinutes, format, isBefore} from 'date-fns'
 import {type Stage} from '../../utils/stageUtils.ts'
 import {initialState, MeetingContext, type MeetingState} from "./MeetingContext.types.ts";
 import {reducer} from "./reducer.ts";
+import {useTranslation} from "react-i18next";
 
 const makeStateFromHash = (hash: string): MeetingState | undefined => {
     const urlParams = new URLSearchParams(hash.substring(2)) // Remove '#?'
@@ -85,6 +86,8 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
 export const MeetingProvider = ({children}: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const hasRestoredFromUrl = useRef(false)
+
+    const {t} = useTranslation();
 
     // Restore state from URL on initial load
     useEffect(() => {
@@ -185,18 +188,18 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
                     const errors: string[] = []
 
                     if (!state.startTime || !state.endTime) {
-                        errors.push('Meeting start and end times are required')
+                        errors.push(t('validation.startEndRequired'))
                     } else if (isBefore(state.endTime, state.startTime)) {
-                        errors.push('Meeting end time must be after start time')
+                        errors.push(t('validation.endTimeBeforeStartTime'))
                     }
 
                     if (state.stages.length === 0) {
-                        errors.push('At least one stage is required')
+                        errors.push(t('validation.oneStageRequired'))
                     }
 
                     const invalidStages = state.stages.filter(stage => stage.duration <= 0)
                     if (invalidStages.length > 0) {
-                        errors.push('All stage durations must be positive numbers')
+                        errors.push(t('validation.positive'))
                     }
 
                     return {isValid: errors.length === 0, errors}

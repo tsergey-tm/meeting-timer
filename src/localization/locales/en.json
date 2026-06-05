@@ -27,6 +27,12 @@
         },
         "setup": {
             "title": "Meeting Timer Setup"
+        },
+        "validation": {
+            "startEndRequired": "Meeting start and end times are required",
+            "endTimeBeforeStartTime": "Meeting end time must be after start time",
+            "oneStageRequired": "At least one stage is required",
+            "positive": "All stage durations must be positive numbers"
         }
     }
 }
