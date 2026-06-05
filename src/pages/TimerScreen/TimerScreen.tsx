@@ -10,6 +10,7 @@ import AudioControls from './components/AudioControls.tsx'
 import HelpModal from './components/HelpModal.tsx'
 import {AppIcon} from "../../assets";
 import {useTranslation} from 'react-i18next';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 const TimerScreen = () => {
     // Meeting context and utilities
@@ -225,6 +226,7 @@ const TimerScreen = () => {
                                 <h1 className="text-2xl font-bold text-gray-900">{t('translation.app.title')}</h1>
                             </div>
                             <div className="flex space-x-2">
+                                <LanguageSwitcher/>
                                 <button
                                     onClick={() => setIsHelpModalOpen(true)}
                                     className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
