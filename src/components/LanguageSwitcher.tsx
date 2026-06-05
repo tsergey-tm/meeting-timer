@@ -10,14 +10,13 @@ const LanguageSwitcher: React.FC = () => {
 
     return (
         <div>
-            <h2>{t('translation.common.welcome')}</h2>
-            <p>{t('translation.timer.title')}</p>
+            <h2>{t('common.welcome')}</h2>
 
             <button onClick={() => changeLanguage('en')}>
-                {t('translation.common.english')}
+                {t('common.english')}
             </button>
             <button onClick={() => changeLanguage('ru')}>
-                {t('translation.common.russian')}
+                {t('common.russian')}
             </button>
         </div>
     );

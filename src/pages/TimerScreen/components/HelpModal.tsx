@@ -15,7 +15,7 @@ const HelpModal = ({isOpen, onRequestClose}: HelpModalProps) => {
             onRequestClose={onRequestClose}
             shouldCloseOnOverlayClick={true}
             shouldCloseOnEsc={true}
-            contentLabel={t("translation.help.title")}
+            contentLabel={t('help.title')}
             style={{
                 overlay: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',

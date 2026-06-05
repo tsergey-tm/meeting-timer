@@ -20,7 +20,7 @@ const NotificationModal = ({
             onRequestClose={onRequestClose}
             shouldCloseOnOverlayClick={false}
             shouldCloseOnEsc={false}
-            contentLabel={t("translation.notification.title")}
+            contentLabel={t('notification.title')}
             style={{
                 overlay: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',

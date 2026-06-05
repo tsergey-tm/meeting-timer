@@ -24,7 +24,7 @@ const TimerDisplay = ({
         <div className="space-y-6">
             <div className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-6">
                 <div className="text-center p-4 bg-lime-50 rounded-lg">
-                    <div className="text-sm text-gray-600 mb-2">{t("translation.timer.current.caption")}</div>
+                    <div className="text-sm text-gray-600 mb-2">{t('timer.current.caption')}</div>
                     <div className="text-2xl font-bold text-gray-900">
                         {format(new Date(), 'HH:mm:ss')}
                     </div>

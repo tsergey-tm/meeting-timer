@@ -25,7 +25,7 @@ const StageList = ({
 
     return (
         <div className="border-t pt-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">{t("translation.meeting.stages.title")}</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">{t('meeting.stages.title')}</h2>
             <div className="space-y-3">
                 {stages.map((stage, index) => {
                     const isCurrent = index === currentStageIndex

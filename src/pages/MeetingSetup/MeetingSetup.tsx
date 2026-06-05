@@ -104,7 +104,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                 <div className="p-6">
                     <div className="flex items-center mb-6">
                         <ClockIcon className="h-8 w-8 text-blue-600 mr-3"/>
-                        <h1 className="text-2xl font-bold text-gray-900">{t("translation.setup.title")}</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">{t('setup.title')}</h1>
                     </div>
 
                     <div className="space-y-6">

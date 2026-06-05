@@ -19,6 +19,11 @@
                 "caption": "Current Time"
             }
         },
+        "common": {
+            "welcome": "Welcome",
+            "english": "English",
+            "russian": "Russian"
+        },
         "setup": {
             "title": "Meeting Timer Setup"
         }

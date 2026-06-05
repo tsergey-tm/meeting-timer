@@ -137,7 +137,7 @@ const TimerScreen = () => {
         if (isNotificationSelected) {
             console.log("notifyOneMinute");
             if ('Notification' in window && window.Notification.permission === 'granted') {
-                new Notification(t('translation.app.title'), {
+                new Notification(t('app.title'), {
                     body: 'One minute left until the meeting stage changes',
                     icon: 'favicon.svg'
                 })
@@ -150,7 +150,7 @@ const TimerScreen = () => {
         setErrorNotified(true);
 
         if (isNotificationSelected && 'Notification' in window && window.Notification.permission === 'granted') {
-            new Notification(t('translation.app.title'), {
+            new Notification(t('app.title'), {
                 body: "It's time to change the stage of the meeting",
                 icon: 'favicon.svg'
             })
@@ -223,7 +223,7 @@ const TimerScreen = () => {
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
                                 <AppIcon className="h-8 w-8 text-blue-600 mr-3"/>
-                                <h1 className="text-2xl font-bold text-gray-900">{t('translation.app.title')}</h1>
+                                <h1 className="text-2xl font-bold text-gray-900">{t('app.title')}</h1>
                             </div>
                             <div className="flex space-x-2">
                                 <LanguageSwitcher/>
