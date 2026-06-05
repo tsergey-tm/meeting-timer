@@ -20,8 +20,9 @@
             }
         },
         "common": {
-            "welcome": "Добро пожаловать",
-            "english": "Английский",
+            "selectLanguage": "Выберите язык",
+            "close": "Закрыть",
+            "english": "English",
             "russian": "Русский"
         },
         "setup": {

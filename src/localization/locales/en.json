@@ -19,8 +19,9 @@
                 "caption": "Current Time"
             }
         },
-        "common": {
-            "welcome": "Welcome",
+        "i18n": {
+            "selectLanguage": "Select language",
+            "close": "Close",
             "english": "English",
             "russian": "Russian"
         },
