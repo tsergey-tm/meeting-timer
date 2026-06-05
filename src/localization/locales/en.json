@@ -4,7 +4,28 @@
             "title": "Meeting Timer"
         },
         "help": {
-            "title": "Meeting Timer Help"
+            "title": "Meeting Timer Help",
+            "content": {
+                "howToUse": "How to use the Meeting Timer:",
+                "steps": [
+                    "At the beginning of each meeting, select how you want to be notified about upcoming stages.",
+                    "Set the start and end time for your meeting.",
+                    "Define the stages and their durations.",
+                    "One minute before a stage change and during stage transitions, you'll receive notifications.",
+                    "When you actually start the meeting, click \"Start meeting\".",
+                    "When each stage is completed, click the \"Next\" button for that stage.",
+                    "The assistant will track delays and show how stage start times shift if you're running late.",
+                    "You can save meetings using the URL."
+                ],
+                "features": "Features:",
+                "featureList": [
+                    "Visual stage tracking with current stage highlighting",
+                    "Automatic time adjustment for late meetings",
+                    "Notification options (browser notifications, sound only, or no notifications)",
+                    "URL-based meeting state saving"
+                ]
+            },
+            "close": "Close"
         },
         "notification": {
             "title": "Notification Permission"

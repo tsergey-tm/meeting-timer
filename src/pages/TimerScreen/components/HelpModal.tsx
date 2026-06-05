@@ -37,7 +37,7 @@ const HelpModal = ({isOpen, onRequestClose}: HelpModalProps) => {
         >
             <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">Meeting Timer Help</h2>
+                    <h2 className="text-xl font-bold text-gray-900">{t('help.title')}</h2>
                     <button
                         onClick={onRequestClose}
                         className="text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -53,35 +53,29 @@ const HelpModal = ({isOpen, onRequestClose}: HelpModalProps) => {
 
                 <div className="space-y-4 text-gray-700">
                     <p>
-                        <strong>How to use the Meeting Timer:</strong>
+                        <strong>{t('help.content.howToUse')}</strong>
                     </p>
 
                     <ol className="list-decimal list-inside space-y-2">
-                        <li>At the beginning of each meeting, select how you want to be notified about upcoming
-                            stages.
-                        </li>
-                        <li>Set the start and end time for your meeting.</li>
-                        <li>Define the stages and their durations.</li>
-                        <li>One minute before a stage change and during stage transitions, you'll receive
-                            notifications.
-                        </li>
-                        <li>When you actually start the meeting, click "Start meeting".</li>
-                        <li>When each stage is completed, click the "Next" button for that stage.</li>
-                        <li>The assistant will track delays and show how stage start times shift if you're running
-                            late.
-                        </li>
-                        <li>You can save meetings using the URL.</li>
+                        <li>{t('help.content.steps.0')}</li>
+                        <li>{t('help.content.steps.1')}</li>
+                        <li>{t('help.content.steps.2')}</li>
+                        <li>{t('help.content.steps.3')}</li>
+                        <li>{t('help.content.steps.4')}</li>
+                        <li>{t('help.content.steps.5')}</li>
+                        <li>{t('help.content.steps.6')}</li>
+                        <li>{t('help.content.steps.7')}</li>
                     </ol>
 
                     <p className="mt-4">
-                        <strong>Features:</strong>
+                        <strong>{t('help.content.features')}</strong>
                     </p>
 
                     <ul className="list-disc list-inside space-y-1">
-                        <li>Visual stage tracking with current stage highlighting</li>
-                        <li>Automatic time adjustment for late meetings</li>
-                        <li>Notification options (browser notifications, sound only, or no notifications)</li>
-                        <li>URL-based meeting state saving</li>
+                        <li>{t('help.content.featureList.0')}</li>
+                        <li>{t('help.content.featureList.1')}</li>
+                        <li>{t('help.content.featureList.2')}</li>
+                        <li>{t('help.content.featureList.3')}</li>
                     </ul>
                 </div>
 
@@ -90,7 +84,7 @@ const HelpModal = ({isOpen, onRequestClose}: HelpModalProps) => {
                         onClick={onRequestClose}
                         className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                        Close
+                        {t('help.close')}
                     </button>
                 </div>
             </div>
