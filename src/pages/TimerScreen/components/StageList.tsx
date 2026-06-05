@@ -59,7 +59,7 @@ const StageList = ({
                                         </div>
                                         <div
                                             className={`text-sm ${isCurrent ? 'text-blue-700' : isCompleted ? 'text-gray-500' : 'text-gray-600'}`}>
-                                            {stage.duration} minutes
+                                            {t('meeting.stages.duration', {duration: stage.duration})}
                                         </div>
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@ const StageList = ({
                                 {isCurrent && !isCompleted && (
                                     <div className="flex items-center space-x-2 ml-4">
                                         <span
-                                            className="text-sm text-blue-600 font-medium hidden min-[480px]:block">Current</span>
+                                            className="text-sm text-blue-600 font-medium hidden min-[480px]:block">{t('setup.stage.current')}</span>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation()

@@ -40,12 +40,18 @@
         },
         "meeting": {
             "stages": {
-                "title": "Meeting Stages"
+                "title": "Meeting Stages",
+                "duration": "{{duration}} minutes"
             }
         },
         "timer": {
             "current": {
-                "caption": "Current Time"
+                "caption": "Current Time",
+                "untilMeeting": "Time until meeting starts",
+                "untilStage": "Time until next stage",
+                "untilEnd": "Time until meeting end",
+                "start": "Start meeting",
+                "end": "Meeting Completed"
             }
         },
         "i18n": {
@@ -67,7 +73,8 @@
                 "placeholders": {
                     "name": "Stage name",
                     "duration": "Duration (min)"
-                }
+                },
+                "current": "Current"
             },
             "save": "Save Configuration",
             "errors": "Please fix these errors:"

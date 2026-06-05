@@ -35,7 +35,7 @@ const TimerDisplay = ({
                             'bg-blue-50'
                 )}>
                     <div className="text-sm text-gray-600 mb-2">
-                        {meetingStatus === 'not_started' ? 'Time until meeting starts' : 'Time until next stage'}
+                        {t(meetingStatus === 'not_started' ? 'timer.current.untilMeeting' : 'timer.current.untilStage')}
                     </div>
                     <div className={"text-2xl font-bold " + (
                         stageRemaining < 1 ? 'text-red-700' :
@@ -51,7 +51,7 @@ const TimerDisplay = ({
                             'bg-green-50'
                 )}>
                     <div className="text-sm text-gray-600 mb-2">
-                        Time until meeting end
+                        {t('timer.current.untilEnd')}
                     </div>
                     <div className={"text-2xl font-bold " + (
                         totalRemaining < 1 ? 'text-red-700' :
@@ -74,7 +74,7 @@ const TimerDisplay = ({
                         disabled={!isValid}
                     >
                         <ClockIcon className="h-5 w-5 mr-2"/>
-                        Start meeting
+                        {t('timer.current.start')}
                     </button>
                 ) : meetingStatus === 'in_progress' ? (
                     <></>
@@ -82,7 +82,7 @@ const TimerDisplay = ({
                     <button
                         className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium transition-colors"
                     >
-                        Meeting Completed
+                        {t('timer.current.end')}
                     </button>
                 )}
             </div>
