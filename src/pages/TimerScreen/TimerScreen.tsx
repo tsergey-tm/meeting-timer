@@ -11,6 +11,7 @@ import HelpModal from './components/HelpModal.tsx'
 import {AppIcon} from "../../assets";
 import {useTranslation} from 'react-i18next';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
+import {isDevelopment} from '../../utils/environment.ts';
 
 const TimerScreen = () => {
     // Meeting context and utilities
@@ -211,11 +212,13 @@ const TimerScreen = () => {
             />
 
             {/* Notification permission modal */}
-            <NotificationModal
-                isOpen={isAudioPermissionModalOpen}
-                onRequestClose={() => setIsAudioPermissionModalOpen(false)}
-                handleNotificationPermission={handleNotificationPermission}
-            />
+            {!isDevelopment() && (
+                <NotificationModal
+                    isOpen={isAudioPermissionModalOpen}
+                    onRequestClose={() => setIsAudioPermissionModalOpen(false)}
+                    handleNotificationPermission={handleNotificationPermission}
+                />
+            )}
 
             <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-6">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
