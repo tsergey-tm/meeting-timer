@@ -5,7 +5,15 @@ temperature: 0.1
 permission:
   edit:
     allow:
-      - "**"
+      - "./**"
+      - "./*"
+      - "CHANGELOG_AI.md"
+    deny:
+      - ".opencode/**"
+  write:
+    allow:
+      - "./**"
+      - "./*"
       - "CHANGELOG_AI.md"
     deny:
       - ".opencode/**"
