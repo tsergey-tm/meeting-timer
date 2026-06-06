@@ -1,6 +1,5 @@
 ---
 description: Run tests and fix it
-agent: tester
 ---
 
 Run the full test suite and show any failures.

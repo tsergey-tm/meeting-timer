@@ -1,6 +1,5 @@
 ---
 description: Run tests and fix it
-agent: coder
 ---
 
 Run the linter and show all errors and warnings.
