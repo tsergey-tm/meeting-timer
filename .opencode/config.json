@@ -1,13 +1,47 @@
 {
-    "orchestrator": {
-        "mode": "pipeline",
-        "strict_routing": true
-    },
-    "permissions": {
-        "main_agent": {
-            "edit": "deny",
-            "bash": "allow"
+    "version": "1.0",
+    "project": {
+        "sandbox": {
+            "enabled": true,
+            "restrict_to_project_root": true
         }
     },
-    "system_prompt_suffix": "CRITICAL: You are an orchestrator router. You cannot write or modify project files yourself. To write code, you MUST invoke the `@coder` sub-agent. To create specs, invoke `@analyst`. To test, invoke `@tester`. To review, invoke `@reviewer`."
+    "security": {
+        "bash": {
+            "deny": [
+                "git add*",
+                "git commit*",
+                "git push*",
+                "git checkout*",
+                "git merge*",
+                "git rebase*",
+                "git branch*",
+                "git remote*",
+                "git clone*",
+                "git init*"
+            ],
+            "allow": [
+                "git status",
+                "git diff*",
+                "git log*",
+                "npm *",
+                "npx *",
+                "vitest *",
+                "ls *",
+                "find *",
+                "cat *"
+            ]
+        },
+        "fs": {
+            "allow_read": [
+                "./**"
+            ],
+            "deny_read": [
+                "../**",
+                "~/**",
+                "/etc/**",
+                "/var/**"
+            ]
+        }
+    }
 }
