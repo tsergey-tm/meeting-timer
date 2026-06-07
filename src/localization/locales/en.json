@@ -46,7 +46,7 @@
         "meeting": {
             "stages": {
                 "title": "Meeting Stages",
-                "duration": "{{duration}} minutes"
+                "duration": "{{durationMins}} minutes"
             }
         },
         "timer": {
@@ -74,7 +74,7 @@
             "timesFull": "Total stage time: {{totalStageDuration}} min, meeting: {{meetingDuration}} min, free time: {{freeTime}}",
             "exceeds": "⚠ Total stage time exceeds meeting duration by {{exceeds}} minutes",
             "stage": {
-                "duration": "{{duration}} min",
+                "duration": "{{durationMins}} min",
                 "placeholders": {
                     "name": "Stage name",
                     "duration": "Duration (min)"

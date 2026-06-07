@@ -17,13 +17,13 @@ describe('Date formatting utilities', () => {
 describe('Meeting context types', () => {
     it('should handle stage calculations', () => {
         const stages = [
-            {name: 'Introduction', duration: 15},
-            {name: 'Discussion', duration: 45},
-            {name: 'Wrap-up', duration: 15}
+            {name: 'Introduction', durationMins: 15},
+            {name: 'Discussion', durationMins: 45},
+            {name: 'Wrap-up', durationMins: 15}
         ]
 
-        const totalDuration = stages.reduce((sum, stage) => sum + stage.duration, 0)
-        expect(totalDuration).toBe(75)
+        const totaldurationMins = stages.reduce((sum, stage) => sum + stage.durationMins, 0)
+        expect(totaldurationMins).toBe(75)
     })
 })
 
@@ -40,9 +40,9 @@ describe('URL state serialization', () => {
         const startTime = new Date('2024-01-15T14:00:00')
         const endTime = new Date('2024-01-15T15:30:00')
         const stages = [
-            {name: 'Introduction', duration: 15},
-            {name: 'Discussion', duration: 45},
-            {name: 'Wrap-up', duration: 15}
+            {name: 'Introduction', durationMins: 15},
+            {name: 'Discussion', durationMins: 45},
+            {name: 'Wrap-up', durationMins: 15}
         ]
 
         // Test serialization (hh24:mm format with individual n/d parameters)
@@ -53,7 +53,7 @@ describe('URL state serialization', () => {
         // Simulate the stage saving logic
         stages.forEach((stage, index) => {
             params.set(`n${index}`, encodeURIComponent(stage.name))
-            params.set(`d${index}`, stage.duration.toString())
+            params.set(`d${index}`, stage.durationMins.toString())
         })
 
         const url = `#?${params.toString()}`
@@ -81,7 +81,7 @@ describe('URL state serialization', () => {
         expect(endMinutes).toBe(30)
 
         // Test stage parsing from n/d parameters
-        const parsedStages: { name: string, duration: number }[] = []
+        const parsedStages: { name: string, durationMins: number }[] = []
         let index = 0
         while (true) {
             const nameParam = `n${index}`
@@ -94,11 +94,11 @@ describe('URL state serialization', () => {
                 break
             }
 
-            const duration = parseInt(durationValue)
-            if (!isNaN(duration)) {
+            const durationMins = parseInt(durationValue)
+            if (!isNaN(durationMins)) {
                 parsedStages.push({
                     name: decodeURIComponent(nameValue),
-                    duration: duration
+                    durationMins: durationMins
                 })
             }
 
@@ -107,7 +107,7 @@ describe('URL state serialization', () => {
 
         expect(parsedStages).toEqual(stages)
         expect(parsedStages[0]).toHaveProperty('name', 'Introduction')
-        expect(parsedStages[0]).toHaveProperty('duration', 15)
+        expect(parsedStages[0]).toHaveProperty('durationMins', 15)
     })
 
     it('should handle malformed URL fragments gracefully', () => {
@@ -152,8 +152,8 @@ describe('Meeting context URL integration', () => {
         const startTime = new Date('2024-01-15T14:00:00')
         const endTime = new Date('2024-01-15T15:30:00')
         const stages = [
-            {name: 'Introduction', duration: 15},
-            {name: 'Discussion', duration: 45}
+            {name: 'Introduction', durationMins: 15},
+            {name: 'Discussion', durationMins: 45}
         ]
 
         const params = new URLSearchParams()
@@ -163,7 +163,7 @@ describe('Meeting context URL integration', () => {
         // Simulate the stage saving logic with n/d parameters
         stages.forEach((stage, index) => {
             params.set(`n${index}`, encodeURIComponent(stage.name))
-            params.set(`d${index}`, stage.duration.toString())
+            params.set(`d${index}`, stage.durationMins.toString())
         })
 
         // Mock window.location
@@ -185,7 +185,7 @@ describe('Meeting context URL integration', () => {
         expect(urlParams.get('e')).toBe('15:30')
 
         // Test stage parsing from n/d parameters
-        const parsedStages: { name: string, duration: number }[] = []
+        const parsedStages: { name: string, durationMins: number }[] = []
         let index = 0
         while (true) {
             const nameParam = `n${index}`
@@ -198,11 +198,11 @@ describe('Meeting context URL integration', () => {
                 break
             }
 
-            const duration = parseInt(durationValue)
-            if (!isNaN(duration)) {
+            const durationMins = parseInt(durationValue)
+            if (!isNaN(durationMins)) {
                 parsedStages.push({
                     name: decodeURIComponent(nameValue),
-                    duration: duration
+                    durationMins: durationMins
                 })
             }
 
@@ -211,9 +211,9 @@ describe('Meeting context URL integration', () => {
 
         expect(parsedStages).toEqual(stages)
         expect(parsedStages[0]).toHaveProperty('name', 'Introduction')
-        expect(parsedStages[0]).toHaveProperty('duration', 15)
+        expect(parsedStages[0]).toHaveProperty('durationMins', 15)
         expect(parsedStages[1]).toHaveProperty('name', 'Discussion')
-        expect(parsedStages[1]).toHaveProperty('duration', 45)
+        expect(parsedStages[1]).toHaveProperty('durationMins', 45)
 
         // Test time parsing from hh24:mm format
         const startTimeParts = decodeURIComponent(urlParams.get('s')!).split(':').map(Number)
@@ -235,8 +235,8 @@ describe('Meeting context URL integration', () => {
         const startTime = new Date('2024-01-15T14:00:00')
         const endTime = new Date('2024-01-15T15:30:00')
         const stages = [
-            {name: 'Introduction', duration: 15},
-            {name: 'Discussion', duration: 45}
+            {name: 'Introduction', durationMins: 15},
+            {name: 'Discussion', durationMins: 45}
         ]
 
         const params = new URLSearchParams()
@@ -245,7 +245,7 @@ describe('Meeting context URL integration', () => {
 
         stages.forEach((stage, index) => {
             params.set(`n${index}`, encodeURIComponent(stage.name))
-            params.set(`d${index}`, stage.duration.toString())
+            params.set(`d${index}`, stage.durationMins.toString())
         })
 
         // Test that restoration only happens when state is empty

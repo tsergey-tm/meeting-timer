@@ -47,7 +47,7 @@ const StageList = () => {
                                         </div>
                                         <div
                                             className={`text-sm ${isCurrent ? 'text-blue-700' : isCompleted ? 'text-gray-500' : 'text-gray-600'}`}>
-                                            {t('meeting.stages.duration', {duration: stage.duration})}
+                                            {t('meeting.stages.duration', {durationMins: stage.durationMins})}
                                         </div>
                                     </div>
                                 </div>

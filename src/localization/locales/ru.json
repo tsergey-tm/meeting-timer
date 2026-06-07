@@ -46,7 +46,7 @@
         "meeting": {
             "stages": {
                 "title": "Этапы встречи",
-                "duration": "{{duration}} минут"
+                "duration": "{{durationMins}} минут"
             }
         },
         "timer": {
@@ -74,7 +74,7 @@
             "timesFull": "Общее время этапа: {{totalStageDuration}} мин, встреча: {{meetingDuration}} мин, свободное время: {{freeTime}}",
             "exceeds": "⚠ Общее время этапов превышает продолжительность встречи на {{exceeds}} минут",
             "stage": {
-                "duration": "{{duration}} мин",
+                "duration": "{{durationMins}} мин",
                 "placeholders": {
                     "name": "Название этапа",
                     "duration": "Продолжительность (мин)"

@@ -41,7 +41,7 @@ export const reducer = (state: MeetingState, action: Action): MeetingState => {
             const updatedStages = [...state.stages];
             updatedStages[action.payload.index] = {
                 ...updatedStages[action.payload.index],
-                duration: action.payload.duration,
+                durationMins: action.payload.durationMins,
                 ...(action.payload.name !== undefined && {name: action.payload.name})
             };
 

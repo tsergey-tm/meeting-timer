@@ -39,12 +39,12 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Intro',
-                        duration: 15,
+                        durationMins: 15,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
-                        duration: 30,
+                        durationMins: 30,
                         displayedStartTime: null
                     }
                 ],
@@ -70,12 +70,12 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Intro',
-                        duration: 15,
+                        durationMins: 15,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
-                        duration: 30,
+                        durationMins: 30,
                         displayedStartTime: null
                     }
                 ],
@@ -102,12 +102,12 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Intro',
-                        duration: 15,
+                        durationMins: 15,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
-                        duration: 30,
+                        durationMins: 30,
                         displayedStartTime: null
                     }
                 ],
@@ -134,12 +134,12 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Intro',
-                        duration: 15,
+                        durationMins: 15,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
-                        duration: 30,
+                        durationMins: 30,
                         displayedStartTime: null
                     }
                 ],
@@ -170,12 +170,12 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Intro',
-                        duration: 15,
+                        durationMins: 15,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
-                        duration: 30,
+                        durationMins: 30,
                         displayedStartTime: null
                     }
                 ],
@@ -203,7 +203,7 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Only Stage',
-                        duration: 15,
+                        durationMins: 15,
                         displayedStartTime: null
                     }
                 ],
@@ -244,12 +244,12 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [
                     {
                         name: 'Stage 1',
-                        duration: 0,
+                        durationMins: 0,
                         displayedStartTime: null
                     },
                     {
                         name: 'Stage 2',
-                        duration: 30,
+                        durationMins: 30,
                         displayedStartTime: null
                     }
                 ],

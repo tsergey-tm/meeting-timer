@@ -15,17 +15,17 @@ describe('Meeting Reducer', () => {
             stages: [
                 {
                     name: 'Introduction',
-                    duration: 15,
+                    durationMins: 15,
                     displayedStartTime: null
                 },
                 {
                     name: 'Discussion',
-                    duration: 30,
+                    durationMins: 30,
                     displayedStartTime: null
                 },
                 {
                     name: 'Wrap-up',
-                    duration: 15,
+                    durationMins: 15,
                     displayedStartTime: null
                 }
             ]
@@ -70,8 +70,7 @@ describe('Meeting Reducer', () => {
         it('should add a new stage and update planned times', () => {
             const newStage = {
                 name: 'Q&A',
-                duration: 20,
-                displayedStartTime: null
+                durationMins: 20
             }
             const action: Action = {type: 'ADD_STAGE', payload: newStage}
 
@@ -79,7 +78,7 @@ describe('Meeting Reducer', () => {
 
             expect(result.stages.length).toBe(4)
             expect(result.stages[3].name).toBe('Q&A')
-            expect(result.stages[3].duration).toBe(20)
+            expect(result.stages[3].durationMins).toBe(20)
             expect(result.meetingStatus).toBe('not_started')
         })
 
@@ -87,7 +86,7 @@ describe('Meeting Reducer', () => {
             const stateWithoutStart = {...mockState, startTime: null}
             const newStage = {
                 name: 'Q&A',
-                duration: 20,
+                durationMins: 20,
                 displayedStartTime: null
             }
             const action: Action = {type: 'ADD_STAGE', payload: newStage}
@@ -100,29 +99,32 @@ describe('Meeting Reducer', () => {
 
     describe('UPDATE_STAGE action', () => {
         it('should update stage duration', () => {
-            const action: Action = {type: 'UPDATE_STAGE', payload: {index: 1, duration: 45}}
+            const action: Action = {type: 'UPDATE_STAGE', payload: {index: 1, durationMins: 45}}
 
             const result = reducer(mockState, action)
 
-            expect(result.stages[1].duration).toBe(45)
+            expect(result.stages[1].durationMins).toBe(45)
             expect(result.stages[1].name).toBe('Discussion') // Name should remain unchanged
         })
 
         it('should update stage name when provided', () => {
-            const action: Action = {type: 'UPDATE_STAGE', payload: {index: 1, duration: 30, name: 'Main Discussion'}}
+            const action: Action = {
+                type: 'UPDATE_STAGE',
+                payload: {index: 1, durationMins: 30, name: 'Main Discussion'}
+            }
 
             const result = reducer(mockState, action)
 
-            expect(result.stages[1].duration).toBe(30)
+            expect(result.stages[1].durationMins).toBe(30)
             expect(result.stages[1].name).toBe('Main Discussion')
         })
 
         it('should handle name undefined', () => {
-            const action: Action = {type: 'UPDATE_STAGE', payload: {index: 1, duration: 45}}
+            const action: Action = {type: 'UPDATE_STAGE', payload: {index: 1, durationMins: 45}}
 
             const result = reducer(mockState, action)
 
-            expect(result.stages[1].duration).toBe(45)
+            expect(result.stages[1].durationMins).toBe(45)
             expect(result.stages[1].name).toBe('Discussion')
         })
     })
@@ -293,7 +295,7 @@ describe('Meeting Reducer', () => {
                 stages: [
                     {
                         name: 'Welcome',
-                        duration: 10,
+                        durationMins: 10,
                         displayedStartTime: null
                     }
                 ],

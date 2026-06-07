@@ -56,11 +56,11 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
             break // No more stages
         }
 
-        const duration = parseInt(durationValue)
-        if (!isNaN(duration) && duration > 0) {
+        const durationMins = parseInt(durationValue)
+        if (!isNaN(durationMins) && durationMins > 0) {
             stages.push({
                 name: decodeURIComponent(nameValue),
-                duration: duration
+                durationMins: durationMins
             })
         }
 
@@ -139,7 +139,7 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
             // Save stages as individual n and d parameters for shorter URLs
             state.stages.forEach((stage, index) => {
                 params.set(`n${index}`, encodeURIComponent(stage.name))
-                params.set(`d${index}`, stage.duration.toString())
+                params.set(`d${index}`, stage.durationMins.toString())
             })
 
             window.history.replaceState(null, '', `#?${params.toString()}`)
@@ -200,7 +200,7 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
                         errors.push(t('validation.oneStageRequired'))
                     }
 
-                    const invalidStages = state.stages.filter(stage => stage.duration <= 0)
+                    const invalidStages = state.stages.filter(stage => stage.durationMins <= 0)
                     if (invalidStages.length > 0) {
                         errors.push(t('validation.positive'))
                     }
@@ -208,7 +208,7 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
                     return {isValid: errors.length === 0, errors}
                 },
                 getTotalStageDuration: () => {
-                    return state.stages.reduce((sum, stage) => sum + stage.duration, 0)
+                    return state.stages.reduce((sum, stage) => sum + stage.durationMins, 0)
                 },
                 getMeetingDuration: () => {
                     if (!state.startTime || !state.endTime) return 0

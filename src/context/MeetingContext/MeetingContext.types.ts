@@ -2,7 +2,7 @@ import {createContext} from "react";
 
 export type Stage = {
     name: string
-    duration: number // in minutes
+    durationMins: number // in minutes
 }
 
 export type MeetingState = {
@@ -36,7 +36,7 @@ export type Action =
     | { type: 'SET_START_TIME'; payload: Date }
     | { type: 'SET_END_TIME'; payload: Date }
     | { type: 'ADD_STAGE'; payload: Stage }
-    | { type: 'UPDATE_STAGE'; payload: { index: number; duration: number; name?: string } }
+    | { type: 'UPDATE_STAGE'; payload: { index: number; durationMins: number; name?: string } }
     | { type: 'REMOVE_STAGE'; payload: number }
     | { type: 'RESET_STATE'; payload: MeetingState }
     | { type: 'MARK_STAGE_COMPLETED'; payload: number }

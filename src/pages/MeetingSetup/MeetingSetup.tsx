@@ -50,14 +50,14 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
         e.preventDefault()
         if (newStageName.trim() === '' || newStageDuration === '') return
 
-        const duration = parseInt(newStageDuration)
-        if (isNaN(duration) || duration <= 0) return
+        const durationMins = parseInt(newStageDuration)
+        if (isNaN(durationMins) || durationMins <= 0) return
 
         dispatch({
             type: 'ADD_STAGE',
             payload: {
                 name: newStageName.trim(),
-                duration: duration
+                durationMins: durationMins
             }
         })
 
@@ -69,7 +69,10 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
         if (isNaN(newDuration) || newDuration <= 0) return
         dispatch({
             type: 'UPDATE_STAGE',
-            payload: {index: stageIndex, duration: newDuration, ...(editName.trim() !== '' && {name: editName.trim()})}
+            payload: {
+                index: stageIndex,
+                durationMins: newDuration, ...(editName.trim() !== '' && {name: editName.trim()})
+            }
         })
         setEditingStageIndex(null)
         setEditDuration('')
@@ -159,7 +162,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                         <div className="flex-1">
                                             <div className="font-medium text-gray-900">{stage.name}</div>
                                             <div
-                                                className="text-sm text-gray-600">{t('setup.stage.duration', {duration: stage.duration})}</div>
+                                                className="text-sm text-gray-600">{t('setup.stage.duration', {durationMins: stage.durationMins})}</div>
                                         </div>
                                         {editingStageIndex === index ? (
                                             <div className="flex items-center space-x-2">
@@ -194,7 +197,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                         ) : (
                                             <div className="flex items-center space-x-2">
                                                 <button
-                                                    onClick={() => handleStartEditing(index, stage.duration, stage.name)}
+                                                    onClick={() => handleStartEditing(index, stage.durationMins, stage.name)}
                                                     className="p-1 text-blue-600 hover:text-blue-800"
                                                     aria-label="Edit stage"
                                                 >
