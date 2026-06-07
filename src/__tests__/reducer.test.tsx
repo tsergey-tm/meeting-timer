@@ -1,5 +1,9 @@
 import {beforeEach, describe, expect, it} from 'vitest'
-import {type Action, initialState, type MeetingState} from '../context/MeetingContext/MeetingContext.types.ts'
+import {
+    type Action,
+    initialMeetingContextState,
+    type MeetingState
+} from '../context/MeetingContext/MeetingContext.types.ts'
 import {reducer} from "../context/MeetingContext/reducer.ts";
 
 describe('Meeting Reducer', () => {
@@ -9,7 +13,7 @@ describe('Meeting Reducer', () => {
     beforeEach(() => {
         now = new Date()
         mockState = {
-            ...initialState,
+            ...initialMeetingContextState(),
             startTime: new Date(now.getTime() + 3600000), // 1 hour from now
             endTime: new Date(now.getTime() + 7200000),   // 2 hours from now
             stages: [
@@ -173,8 +177,8 @@ describe('Meeting Reducer', () => {
             expect(result.meetingStatus).toBe('in_progress')
             expect(result.currentStageIndex).toBe(0)
             expect(result.actualStartTimes[0]).toBeDefined()
-            expect(result.actualStartTimes[0]!.getTime()).toBeLessThanOrEqual(now.getTime())
-            expect(result.actualStartTimes[0]!.getTime()).toBeGreaterThanOrEqual(now.getTime() - 100) // Within 100ms
+            expect(result.actualStartTimes[0]!.getTime()).toBeLessThanOrEqual(now.getTime() + 100)  // Within 100ms
+            expect(result.actualStartTimes[0]!.getTime()).toBeGreaterThanOrEqual(now.getTime())
         })
 
         it('should set lastUpdateTime', () => {
@@ -272,7 +276,8 @@ describe('Meeting Reducer', () => {
                     ...stage,
                     actualStartTime: index === 0 ? new Date(now.getTime() - 300000) : null, // started 5 min ago
                     plannedStartTime: new Date(now.getTime() + index * 60000)
-                }))
+                })),
+                actualStartTimes: [now, null, null]
             }
 
             const action: Action = {type: 'UPDATE_STAGES_DISPLAYED_TIMES', payload: inProgressState.stages}
@@ -300,7 +305,11 @@ describe('Meeting Reducer', () => {
                 lastUpdateTime: null,
                 bufferLength: null,
                 bufferPlannedLength: null,
-                actualStartTimes: [null]
+                actualStartTimes: [null],
+                actualEndTimes: [null],
+                actualDurationMins: [null],
+                displayedStartTime: [],
+                plannedStartTimes: []
             }
 
             const action: Action = {type: 'RESET_STATE', payload: newState}

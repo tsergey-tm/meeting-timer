@@ -1,6 +1,6 @@
 import {format} from 'date-fns'
 import {ClockIcon} from '@radix-ui/react-icons'
-import {formatTime} from '../../../utils/timeFormatting.ts'
+import {formatTime} from '../../../utils/timeUtils.ts'
 import {useTranslation} from 'react-i18next';
 import {TimeBufferBar, type TimeBufferBarProps} from "../../../components/TimeBufferBar.tsx";
 import {useState} from "react";

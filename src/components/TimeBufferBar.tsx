@@ -1,5 +1,5 @@
 import React from 'react';
-import {formatTimeToMinutes} from "../utils/timeFormatting.ts";
+import {formatTimeToMinutes} from "../utils/timeUtils.ts";
 import {useTranslation} from "react-i18next";
 
 export interface TimeBufferBarProps {

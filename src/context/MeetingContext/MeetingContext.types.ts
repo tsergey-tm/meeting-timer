@@ -17,6 +17,7 @@ export type MeetingState = {
     lastUpdateTime: Date | null
     actualStartTimes: Array<Date | null>
     actualEndTimes: Array<Date | null>
+    actualDurationMins: Array<number | null>
     displayedStartTime: Array<Date | null>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
@@ -43,19 +44,22 @@ export type Action =
     | { type: 'START_MEETING' }
     | { type: 'UPDATE_STAGES_DISPLAYED_TIMES'; payload: Stage[] }
 
-export const initialState: MeetingState = {
-    startTime: null,
-    endTime: null,
-    stages: [],
-    plannedStartTimes: [],
-    bufferPlannedLength: null,
-    bufferLength: null,
-    currentStageIndex: -1,
-    meetingStatus: 'not_started',
-    lastUpdateTime: null,
-    actualStartTimes: [],
-    actualEndTimes: [],
-    displayedStartTime: []
+export const initialMeetingContextState = (): MeetingState => {
+    return {
+        startTime: null,
+        endTime: null,
+        stages: [],
+        plannedStartTimes: [],
+        bufferPlannedLength: null,
+        bufferLength: null,
+        currentStageIndex: -1,
+        meetingStatus: 'not_started',
+        lastUpdateTime: null,
+        actualStartTimes: [],
+        actualEndTimes: [],
+        actualDurationMins: [],
+        displayedStartTime: []
+    }
 }
 
 export const MeetingContext = createContext<MeetingContextType | undefined>(undefined)

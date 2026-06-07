@@ -135,9 +135,9 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                         </div>
 
                         <div className="border-t pt-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-lg font-medium text-gray-900">{t('setup.stages')}</h2>
-                                <span className="text-sm text-gray-600">
+                            <div className="mb-4">
+                                <h2 className="text-lg font-medium text-gray-900 self-stretch text-center">{t('setup.stages')}</h2>
+                                <div className="text-sm text-gray-600">
                                     {(meetingDuration > 0) ?
                                         t('setup.timesFull', {
                                             totalStageDuration: totalStageDuration,
@@ -146,7 +146,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                                         }) :
                                         t('setup.timesShort', {totalStageDuration: totalStageDuration})
                                     }
-                               </span>
+                                </div>
                             </div>
 
                             {meetingDuration > 0 && totalStageDuration > meetingDuration && (

@@ -15,3 +15,7 @@ export const formatTimeToMinutes = (seconds: number): string => {
         `${minutes.toString().padStart(2, '0')}:` +
         `${secs.toString().padStart(2, '0')}`
 }
+
+export const timeDiffInMins = (date1: Date, date2: Date): number => {
+    return Math.ceil((date1.getTime() - date2.getTime()) / 1000 / 60);
+}

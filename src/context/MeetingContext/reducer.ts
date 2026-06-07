@@ -1,5 +1,6 @@
 import {calculateDisplayedStageTimes, calculatePlannedStageTimes} from "./stageUtils.ts";
 import type {Action, MeetingState} from "./MeetingContext.types.ts";
+import {timeDiffInMins} from "../../utils/timeUtils.ts";
 
 const resetState = (state: MeetingState): MeetingState => {
     return calculatePlannedStageTimes({
@@ -7,6 +8,7 @@ const resetState = (state: MeetingState): MeetingState => {
         plannedStartTimes: [],
         actualStartTimes: new Array<Date | null>(state.stages.length),
         actualEndTimes: new Array<Date | null>(state.stages.length),
+        actualDurationMins: new Array<number>(state.stages.length),
         meetingStatus: 'not_started',
         currentStageIndex: -1
     });
@@ -60,6 +62,11 @@ export const reducer = (state: MeetingState, action: Action): MeetingState => {
         case 'MARK_STAGE_COMPLETED': {
             const newState = {...state}
             newState.actualEndTimes[newState.currentStageIndex] = now;
+            newState.actualDurationMins[newState.currentStageIndex] = timeDiffInMins(
+                newState.actualEndTimes[newState.currentStageIndex]!,
+                newState.actualStartTimes[newState.currentStageIndex]!
+            );
+
             const newCurrentStageIndex = action.payload + 1;
 
             if (newCurrentStageIndex < newState.stages.length) {

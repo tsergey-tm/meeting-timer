@@ -252,7 +252,6 @@ const TimerScreen = () => {
                                 startMeeting={startMeeting}
                                 isValid={isValid}
                             />
-
                             <StageList/>
                         </div>
                     </div>

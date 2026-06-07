@@ -1,6 +1,6 @@
 import {type ReactNode, useEffect, useReducer, useRef} from 'react'
 import {differenceInMinutes, format, isBefore} from 'date-fns'
-import {initialState, MeetingContext, type MeetingState, type Stage} from "./MeetingContext.types.ts";
+import {initialMeetingContextState, MeetingContext, type MeetingState, type Stage} from "./MeetingContext.types.ts";
 import {reducer} from "./reducer.ts";
 import {useTranslation} from "react-i18next";
 
@@ -69,23 +69,15 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
 
     // Create new state from URL
     return {
+        ...initialMeetingContextState(),
         startTime: startTime,
         endTime: endTime,
-        stages: stages,
-        plannedStartTimes: [],
-        actualStartTimes: [],
-        actualEndTimes: [],
-        displayedStartTime: [],
-        currentStageIndex: -1,
-        meetingStatus: 'not_started',
-        lastUpdateTime: null,
-        bufferPlannedLength: null,
-        bufferLength: null
+        stages: stages
     };
 }
 
 export const MeetingProvider = ({children}: { children: ReactNode }) => {
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useReducer(reducer, initialMeetingContextState())
     const hasRestoredFromUrl = useRef(false)
 
     const {t} = useTranslation();

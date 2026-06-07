@@ -7,6 +7,18 @@ const StageList = () => {
     const {state, dispatch} = useMeeting();
     const {t} = useTranslation();
 
+    const dateCompareMinute = (date1: Date | null, date2: Date | null) => {
+        if (date1 && date2) {
+            if (Math.abs(date1.getTime() - date2.getTime()) < 60 * 1000) {
+                return 0;
+            } else {
+                return date1.getTime() - date2.getTime();
+            }
+        } else {
+            return 0;
+        }
+    }
+
     const markStageCompleted = (stageIndex: number) => {
         dispatch({type: 'MARK_STAGE_COMPLETED', payload: stageIndex})
     }
@@ -17,9 +29,8 @@ const StageList = () => {
             <div className="space-y-3">
                 {state.stages.map((stage, index) => {
                     const isCurrent = index === state.currentStageIndex
-                    const isCompleted = state.actualEndTimes[index] !== null
-                    // Simplified logic since plannedStartTime is not available in current context
-                    const isDelayed = false
+                    const isCompleted = state.actualEndTimes[index]
+                    const isDelayed = dateCompareMinute(state.plannedStartTimes[index], state.displayedStartTime[index]) < 0;
 
                     return (
                         <div
@@ -56,7 +67,8 @@ const StageList = () => {
                                 {state.displayedStartTime && state.displayedStartTime[index] && (
                                     <div
                                         className={`text-sm font-medium text-right ${isDelayed ? 'text-orange-600' : 'text-gray-600'}`}>
-                                        {format(state.displayedStartTime[index], 'HH:mm')}
+                                        {format(state.displayedStartTime[index], 'HH:mm')}&nbsp;
+                                        ({format(state.plannedStartTimes[index], 'HH:mm')})
                                     </div>
                                 )}
                                 {isCurrent && !isCompleted && (

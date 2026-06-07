@@ -28,6 +28,17 @@ export const calculatePlannedStageTimes = (state: MeetingState): MeetingState =>
     }
 }
 
+const dateMax = (dates: Date[]): Date => {
+
+    let res: Date = dates[0];
+    for (let i = 1; i < dates.length; i++) {
+        if (res < dates[i]) {
+            res = dates[i];
+        }
+    }
+    return res;
+}
+
 export function calculateDisplayedStageTimes(state: MeetingState): MeetingState {
 
     if (state.startTime === null || state.stages.length < 1) {
@@ -36,38 +47,29 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
 
     const now = new Date();
 
-    let calculatedStartTime: Date;
-
-    // First: we need calculate start time for first stage
-    if (state.currentStageIndex < 0) {
-        // Not started
-        if (state.startTime < now) {
-            // We were late starting the meeting
-            calculatedStartTime = now;
-        } else {
-            // It's not time to start yet.
-            calculatedStartTime = state.startTime;
-        }
-    } else {
-        // The meeting has started
-        // Get actual start time for first stage from the array, or default to new Date()
-        calculatedStartTime = (state.actualStartTimes && state.actualStartTimes[0]) || now;
-    }
-
+    let calculatedStartTime: Date = dateMax([state.startTime, now]);
 
     // Initialize displayedStartTime array
     const newDisplayedStartTime: Array<Date | null> = new Array<Date | null>(state.stages.length);
 
-    newDisplayedStartTime[0] = calculatedStartTime;
-    calculatedStartTime = new Date(calculatedStartTime.getTime() + state.stages[0].durationMins * 60_000);
+    for (let i = 0; i < state.stages.length; i++) {
 
-    for (let i = 1; i < state.stages.length; i++) {
-        // If stage has actual start time - use it
-        if (state.actualStartTimes[i]) {
-            calculatedStartTime = state.actualStartTimes[i]!;
+        if (i < state.currentStageIndex) {
+            // Before current
+            newDisplayedStartTime[i] = state.actualStartTimes[i]!;
+            calculatedStartTime = state.actualEndTimes[i]!;
+        } else if (i === state.currentStageIndex) {
+            // Current
+            newDisplayedStartTime[i] = state.actualStartTimes[i]!;
+            calculatedStartTime = dateMax([
+                new Date(newDisplayedStartTime[i]!.getTime() + state.stages[i].durationMins * 60_000),
+                now
+            ]);
+        } else {
+            // After current
+            newDisplayedStartTime[i] = dateMax([calculatedStartTime, state.plannedStartTimes[i]]);
+            calculatedStartTime = new Date(newDisplayedStartTime[i]!.getTime() + state.stages[i].durationMins * 60_000);
         }
-        newDisplayedStartTime[i] = calculatedStartTime;
-        calculatedStartTime = new Date(calculatedStartTime.getTime() + state.stages[i].durationMins * 60_000);
     }
 
     return {
