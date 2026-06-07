@@ -7,6 +7,9 @@ export const isDevelopment = (): boolean => {
     if (import.meta.env?.MODE === 'development') {
         return true;
     }
+    if (import.meta.env?.MODE === 'test') {
+        return false;
+    }
 
     // Check for process.env.NODE_ENV (Node.js style)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
