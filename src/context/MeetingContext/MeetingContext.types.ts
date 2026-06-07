@@ -1,5 +1,13 @@
-import {type Stage} from "./stageUtils.ts";
 import {createContext} from "react";
+
+export type Stage = {
+    name: string
+    duration: number // in minutes
+    plannedStartTime: Date | null
+    actualStartTime: Date | null
+    actualEndTime: Date | null
+    displayedStartTime: Date | null
+}
 
 export type MeetingState = {
     startTime: Date | null

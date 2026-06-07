@@ -1,14 +1,5 @@
 import type {MeetingState} from "./MeetingContext.types.ts";
 
-export type Stage = {
-    name: string
-    duration: number // in minutes
-    plannedStartTime: Date | null
-    actualStartTime: Date | null
-    actualEndTime: Date | null
-    displayedStartTime: Date | null
-}
-
 export const calculatePlannedStageTimes = (state: MeetingState): MeetingState => {
     if (state.startTime === null || state.stages.length < 1) return state
 
