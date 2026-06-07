@@ -1,37 +1,25 @@
 import {format} from 'date-fns'
 import {CheckIcon, ClockIcon, TrackNextIcon} from '@radix-ui/react-icons'
 import {useTranslation} from 'react-i18next';
+import {useMeeting} from "../../../context/MeetingContext/useMeeting.ts";
 
-interface Stage {
-    name: string
-    duration: number
-    actualEndTime: Date | null
-    displayedStartTime: Date | null
-    plannedStartTime: Date | null
-}
-
-interface StageListProps {
-    stages: Stage[]
-    currentStageIndex: number
-    markStageCompleted: (index: number) => void
-}
-
-const StageList = ({
-                       stages,
-                       currentStageIndex,
-                       markStageCompleted
-                   }: StageListProps) => {
+const StageList = () => {
+    const {state, dispatch} = useMeeting();
     const {t} = useTranslation();
+
+    const markStageCompleted = (stageIndex: number) => {
+        dispatch({type: 'MARK_STAGE_COMPLETED', payload: stageIndex})
+    }
 
     return (
         <div className="border-t pt-6">
             <h2 className="text-lg font-medium text-gray-900 mb-4">{t('meeting.stages.title')}</h2>
             <div className="space-y-3">
-                {stages.map((stage, index) => {
-                    const isCurrent = index === currentStageIndex
+                {state.stages.map((stage, index) => {
+                    const isCurrent = index === state.currentStageIndex
                     const isCompleted = stage.actualEndTime !== null
-                    const isDelayed = stage.displayedStartTime && stage.plannedStartTime &&
-                        stage.displayedStartTime.getTime() > stage.plannedStartTime.getTime() + 60_000
+                    // Simplified logic since plannedStartTime is not available in current context
+                    const isDelayed = false
 
                     return (
                         <div

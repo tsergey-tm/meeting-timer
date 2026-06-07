@@ -99,11 +99,6 @@ const TimerScreen = () => {
         resetPlayedSounds();
     }
 
-    const markStageCompleted = (stageIndex: number) => {
-        resetPlayedSounds();
-        dispatch({type: 'MARK_STAGE_COMPLETED', payload: stageIndex})
-    }
-
     const resetPlayedSounds = () => {
         setWarnNotified(false);
         setErrorNotified(false);
@@ -258,11 +253,7 @@ const TimerScreen = () => {
                                 isValid={isValid}
                             />
 
-                            <StageList
-                                stages={state.stages}
-                                currentStageIndex={state.currentStageIndex}
-                                markStageCompleted={markStageCompleted}
-                            />
+                            <StageList/>
                         </div>
                     </div>
                 </div>
