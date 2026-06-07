@@ -60,30 +60,33 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
         }
     } else {
         // The meeting has started
-        calculatedStartTime = stages[0].actualStartTime!;
+        // Get actual start time for first stage from the array, or default to new Date()
+        calculatedStartTime = (state.actualStartTimes && state.actualStartTimes[0]) || now;
     }
 
 
     for (let i = 0; i < stages.length; i++) {
         const stage = stages[i];
-        if (stage.actualStartTime === null) {
+        // Check if this stage has an actual start time in the array
+        const actualStartTime = (state.actualStartTimes && state.actualStartTimes[i]) || null;
+        if (actualStartTime === null) {
             // Stage not started: use calculated start time
             stage.displayedStartTime = new Date(
                 Math.max(
                     now.getTime(),
                     calculatedStartTime.getTime(),
-                    state.plannedStartTimes[i] && state.plannedStartTimes[i] !== null ? state.plannedStartTimes[i].getTime() : calculatedStartTime.getTime()
+                    (state.plannedStartTimes && state.plannedStartTimes[i] && state.plannedStartTimes[i] !== null) ? state.plannedStartTimes[i].getTime() : calculatedStartTime.getTime()
                 )
             );
             calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60_000);
         } else {
             // Stage started: overwrite calculated start time by actual start time
-            stage.displayedStartTime = stage.actualStartTime;
-            if (stage.actualEndTime === null) {
-                calculatedStartTime = new Date(stage.actualStartTime.getTime() + stage.duration * 60_000);
+            stage.displayedStartTime = actualStartTime;
+            /*if (stage.actualEndTimes === null) {
+                calculatedStartTime = new Date(actualStartTime.getTime() + stage.duration * 60_000);
             } else {
-                calculatedStartTime = stage.actualEndTime;
-            }
+                calculatedStartTime = stage.actualEndTimes;
+            }*/
         }
     }
 

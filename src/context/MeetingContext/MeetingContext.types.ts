@@ -3,8 +3,6 @@ import {createContext} from "react";
 export type Stage = {
     name: string
     duration: number // in minutes
-    actualStartTime: Date | null
-    actualEndTime: Date | null
     displayedStartTime: Date | null
 }
 
@@ -18,6 +16,8 @@ export type MeetingState = {
     currentStageIndex: number
     meetingStatus: 'not_started' | 'in_progress' | 'completed'
     lastUpdateTime: Date | null
+    actualStartTimes: Array<Date | null>
+    actualEndTimes: Array<Date | null>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
 }
@@ -53,6 +53,8 @@ export const initialState: MeetingState = {
     currentStageIndex: -1,
     meetingStatus: 'not_started',
     lastUpdateTime: null,
+    actualStartTimes: [],
+    actualEndTimes: []
 }
 
 export const MeetingContext = createContext<MeetingContextType | undefined>(undefined)

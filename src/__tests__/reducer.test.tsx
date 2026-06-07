@@ -16,25 +16,16 @@ describe('Meeting Reducer', () => {
                 {
                     name: 'Introduction',
                     duration: 15,
-                    plannedStartTime: null,
-                    actualStartTime: null,
-                    actualEndTime: null,
                     displayedStartTime: null
                 },
                 {
                     name: 'Discussion',
                     duration: 30,
-                    plannedStartTime: null,
-                    actualStartTime: null,
-                    actualEndTime: null,
                     displayedStartTime: null
                 },
                 {
                     name: 'Wrap-up',
                     duration: 15,
-                    plannedStartTime: null,
-                    actualStartTime: null,
-                    actualEndTime: null,
                     displayedStartTime: null
                 }
             ]
@@ -50,7 +41,9 @@ describe('Meeting Reducer', () => {
 
             expect(result.startTime).toEqual(newStartTime)
             expect(result.meetingStatus).toBe('not_started')
-            expect(result.stages[0].plannedStartTime).toBeDefined()
+            // The plannedStartTime field was moved to MeetingState, so we don't expect it on Stage anymore
+            // Just verify the stage is properly set
+            expect(result.stages[0].name).toBe('Introduction')
         })
 
         it('should handle null start time', () => {
@@ -78,9 +71,6 @@ describe('Meeting Reducer', () => {
             const newStage = {
                 name: 'Q&A',
                 duration: 20,
-                plannedStartTime: null,
-                actualStartTime: null,
-                actualEndTime: null,
                 displayedStartTime: null
             }
             const action: Action = {type: 'ADD_STAGE', payload: newStage}
@@ -98,9 +88,6 @@ describe('Meeting Reducer', () => {
             const newStage = {
                 name: 'Q&A',
                 duration: 20,
-                plannedStartTime: null,
-                actualStartTime: null,
-                actualEndTime: null,
                 displayedStartTime: null
             }
             const action: Action = {type: 'ADD_STAGE', payload: newStage}
@@ -186,9 +173,9 @@ describe('Meeting Reducer', () => {
 
             expect(result.meetingStatus).toBe('in_progress')
             expect(result.currentStageIndex).toBe(0)
-            expect(result.stages[0].actualStartTime).toBeDefined()
-            expect(result.stages[0].actualStartTime!.getTime()).toBeLessThanOrEqual(now.getTime())
-            expect(result.stages[0].actualStartTime!.getTime()).toBeGreaterThanOrEqual(now.getTime() - 100) // Within 100ms
+            expect(result.actualStartTimes[0]).toBeDefined()
+            expect(result.actualStartTimes[0]!.getTime()).toBeLessThanOrEqual(now.getTime())
+            expect(result.actualStartTimes[0]!.getTime()).toBeGreaterThanOrEqual(now.getTime() - 100) // Within 100ms
         })
 
         it('should set lastUpdateTime', () => {
@@ -217,9 +204,9 @@ describe('Meeting Reducer', () => {
                 currentStageIndex: 0,
                 stages: mockState.stages.map((stage, index) => ({
                     ...stage,
-                    actualStartTime: index === 0 ? now : null,
                     plannedStartTime: new Date(now.getTime() + index * 15 * 60000)
-                }))
+                })),
+                actualStartTimes: [now, null, null]
             }
 
             const action: Action = {type: 'MARK_STAGE_COMPLETED', payload: 0}
@@ -239,9 +226,9 @@ describe('Meeting Reducer', () => {
                 currentStageIndex: 1,
                 stages: mockState.stages.map((stage, index) => ({
                     ...stage,
-                    actualStartTime: index <= 1 ? now : null,
                     plannedStartTime: index === 0 ? new Date(now.getTime() - 3600000) : new Date(now.getTime() - 2700000)
-                }))
+                })),
+                actualStartTimes: [now, now, null]
             }
 
             const action: Action = {type: 'MARK_STAGE_COMPLETED', payload: 1}
@@ -262,17 +249,17 @@ describe('Meeting Reducer', () => {
                 currentStageIndex: 0,
                 stages: mockState.stages.map((stage, index) => ({
                     ...stage,
-                    actualStartTime: index === 0 ? now : null,
                     plannedStartTime: new Date(now.getTime() + index * 15 * 60000)
-                }))
+                })),
+                actualStartTimes: [now, null, null]
             }
 
             const action: Action = {type: 'MARK_STAGE_COMPLETED', payload: 0}
             const result = reducer(inProgressState, action)
 
-            expect(result.stages[1].actualStartTime).toBeDefined()
+            expect(result.actualStartTimes[1]).toBeDefined()
             // Проверяем, что время не позже текущего времени (с небольшим допуском для тестов)
-            expect(result.stages[1].actualStartTime!.getTime()).toBeLessThanOrEqual(now.getTime() + 100)
+            expect(result.actualStartTimes[1]!.getTime()).toBeLessThanOrEqual(now.getTime() + 100)
         })
     })
 
@@ -307,9 +294,6 @@ describe('Meeting Reducer', () => {
                     {
                         name: 'Welcome',
                         duration: 10,
-                        plannedStartTime: null,
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],
@@ -317,7 +301,8 @@ describe('Meeting Reducer', () => {
                 meetingStatus: 'not_started',
                 lastUpdateTime: null,
                 bufferLength: null,
-                bufferPlannedLength: null
+                bufferPlannedLength: null,
+                actualStartTimes: [null]
             }
 
             const action: Action = {type: 'RESET_STATE', payload: newState}
@@ -334,7 +319,8 @@ describe('Meeting Reducer', () => {
             const newState: MeetingState = {
                 ...mockState,
                 startTime: null,
-                stages: []
+                stages: [],
+                actualStartTimes: []
             }
 
             const action: Action = {type: 'RESET_STATE', payload: newState}

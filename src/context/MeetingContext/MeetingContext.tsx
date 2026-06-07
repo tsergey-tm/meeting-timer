@@ -61,8 +61,6 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
             stages.push({
                 name: decodeURIComponent(nameValue),
                 duration: duration,
-                actualStartTime: null,
-                actualEndTime: null,
                 displayedStartTime: null
             })
         }
@@ -76,6 +74,8 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
         endTime: endTime,
         stages: stages,
         plannedStartTimes: [],
+        actualStartTimes: [],
+        actualEndTimes: [],
         currentStageIndex: -1,
         meetingStatus: 'not_started',
         lastUpdateTime: null,

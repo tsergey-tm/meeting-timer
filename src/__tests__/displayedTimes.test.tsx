@@ -40,17 +40,11 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Intro',
                         duration: 15,
-                        plannedStartTime: new Date(now.getTime() + 1800000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
                         duration: 30,
-                        plannedStartTime: new Date(now.getTime() + 2100000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],
@@ -77,17 +71,11 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Intro',
                         duration: 15,
-                        plannedStartTime: new Date(now.getTime() - 3600000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
                         duration: 30,
-                        plannedStartTime: new Date(now.getTime() - 2700000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],
@@ -115,17 +103,11 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Intro',
                         duration: 15,
-                        plannedStartTime: new Date(now.getTime() - 1800000),
-                        actualStartTime: actualStartTime,
-                        actualEndTime: null,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
                         duration: 30,
-                        plannedStartTime: new Date(now.getTime() - 1500000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],
@@ -153,17 +135,11 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Intro',
                         duration: 15,
-                        plannedStartTime: new Date(now.getTime() - 1800000),
-                        actualStartTime: actualStartTime,
-                        actualEndTime: actualEndTime,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
                         duration: 30,
-                        plannedStartTime: new Date(now.getTime() - 1500000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],
@@ -195,17 +171,11 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Intro',
                         duration: 15,
-                        plannedStartTime: new Date(now.getTime() - 1800000),
-                        actualStartTime: start1,
-                        actualEndTime: end1,
                         displayedStartTime: null
                     },
                     {
                         name: 'Discussion',
                         duration: 30,
-                        plannedStartTime: new Date(now.getTime() - 1500000),
-                        actualStartTime: start2,
-                        actualEndTime: end2,
                         displayedStartTime: null
                     }
                 ],
@@ -234,9 +204,6 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Only Stage',
                         duration: 15,
-                        plannedStartTime: new Date(now.getTime() + 1800000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],
@@ -278,17 +245,11 @@ describe('calculateDisplayedStageTimes function', () => {
                     {
                         name: 'Stage 1',
                         duration: 0,
-                        plannedStartTime: new Date(now.getTime() + 1800000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     },
                     {
                         name: 'Stage 2',
                         duration: 30,
-                        plannedStartTime: new Date(now.getTime() + 1800000),
-                        actualStartTime: null,
-                        actualEndTime: null,
                         displayedStartTime: null
                     }
                 ],

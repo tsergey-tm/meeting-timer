@@ -1,35 +1,39 @@
 import {calculateDisplayedStageTimes, calculatePlannedStageTimes} from "./stageUtils.ts";
 import type {Action, MeetingState} from "./MeetingContext.types.ts";
 
-export function reducer(state: MeetingState, action: Action): MeetingState {
+const resetState = (state: MeetingState): MeetingState => {
+    return calculatePlannedStageTimes({
+        ...state,
+        plannedStartTimes: [],
+        actualStartTimes: new Array<Date | null>(state.stages.length),
+        actualEndTimes: new Array<Date | null>(state.stages.length),
+        meetingStatus: 'not_started',
+        currentStageIndex: -1
+    });
+}
+
+export const reducer = (state: MeetingState, action: Action): MeetingState => {
 
     const now = new Date();
 
     switch (action.type) {
         case 'SET_START_TIME': {
-            return calculatePlannedStageTimes({
+            return resetState({
                 ...state,
-                startTime: action.payload,
-                meetingStatus: 'not_started',
-                currentStageIndex: -1
+                startTime: action.payload
             })
         }
 
         case 'SET_END_TIME':
-            return {
+            return resetState({
                 ...state,
                 endTime: action.payload,
-                meetingStatus: 'not_started',
-                currentStageIndex: -1
-            }
+            })
 
         case 'ADD_STAGE': {
-            return calculatePlannedStageTimes({
+            return resetState({
                 ...state,
                 stages: [...state.stages, action.payload],
-                plannedStartTimes: [],
-                meetingStatus: 'not_started',
-                currentStageIndex: -1
             })
         }
 
@@ -41,29 +45,27 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
                 ...(action.payload.name !== undefined && {name: action.payload.name})
             };
 
-            return calculatePlannedStageTimes({
+            return resetState({
                 ...state,
-                stages: updatedStages,
-                meetingStatus: 'not_started',
-                currentStageIndex: -1
+                stages: updatedStages
             })
         }
 
         case 'REMOVE_STAGE':
-            return {
+            return resetState({
                 ...state,
                 stages: state.stages.filter((_, index) => index !== action.payload),
-                plannedStartTimes: state.plannedStartTimes.filter((_, index) => index !== action.payload),
-                meetingStatus: 'not_started',
-                currentStageIndex: -1
-            }
+            })
 
         case 'MARK_STAGE_COMPLETED': {
             const newState = {...state}
-            newState.stages[newState.currentStageIndex].actualEndTime = now
+            newState.actualEndTimes[newState.currentStageIndex] = now
             const newCurrentStageIndex = action.payload + 1
             if (newCurrentStageIndex < newState.stages.length) {
-                newState.stages[newCurrentStageIndex].actualStartTime = now
+                // Update actualStartTimes array for the next stage
+                const newActualStartTimes = [...newState.actualStartTimes];
+                newActualStartTimes[newCurrentStageIndex] = now;
+                newState.actualStartTimes = newActualStartTimes;
             }
 
             return calculateDisplayedStageTimes({
@@ -75,18 +77,16 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
 
         case 'START_MEETING': {
             const updatedStages = [...state.stages];
-
-            updatedStages[0] = {
-                ...updatedStages[0],
-                actualStartTime: now
-            };
+            const newActualStartTimes = [...state.actualStartTimes];
+            newActualStartTimes[0] = now;
 
             return calculateDisplayedStageTimes({
                 ...state,
                 meetingStatus: 'in_progress',
                 lastUpdateTime: now,
                 currentStageIndex: 0,
-                stages: updatedStages
+                stages: updatedStages,
+                actualStartTimes: newActualStartTimes
             })
         }
 
@@ -95,13 +95,11 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
 
         case 'RESET_STATE':
             return calculateDisplayedStageTimes(
-                calculatePlannedStageTimes({
+                resetState({
                     ...action.payload,
-                    meetingStatus: 'not_started',
-                    currentStageIndex: -1
                 }));
 
         default:
             return state
     }
-}
+};

@@ -58,8 +58,6 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
             payload: {
                 name: newStageName.trim(),
                 duration: duration,
-                actualEndTime: null,
-                actualStartTime: null,
                 displayedStartTime: null
             }
         })
