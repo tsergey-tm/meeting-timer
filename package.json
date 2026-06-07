@@ -8,7 +8,7 @@
         "build": "tsc -b && vite build",
         "deploy": "vite build && gh-pages -d build",
         "audit": "better-npm-audit audit -p",
-        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "lint": "eslint . --ext js,ts,tsx --report-unused-disable-directives --max-warnings 0",
         "typecheck": "tsc --noEmit",
         "preview": "vite preview",
         "test": "vitest run",

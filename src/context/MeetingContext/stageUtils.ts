@@ -3,22 +3,35 @@ import type {MeetingState} from "./MeetingContext.types.ts";
 export const calculatePlannedStageTimes = (state: MeetingState): MeetingState => {
     if (state.startTime === null || state.stages.length < 1) return state
 
-    const stages = state.stages.map((stage, index) => {
-        const previousStagesDuration = state.stages.slice(0, index).reduce((sum, s) => sum + s.duration, 0)
-        const plannedStartTime = new Date(state.startTime!.getTime() + previousStagesDuration * 60_000)
+    // Initialize plannedStartTimes array with correct length
+    let plannedStartTimes = Array(state.stages.length).fill(null);
 
+    // If we have existing plannedStartTimes, use them as base but ensure proper length
+    if (state.plannedStartTimes && state.plannedStartTimes.length > 0) {
+        plannedStartTimes = [...state.plannedStartTimes];
+        while (plannedStartTimes.length < state.stages.length) {
+            plannedStartTimes.push(null);
+        }
+    }
+
+    const newPlannedStartTimes: Array<Date> = plannedStartTimes.map((_, index) => {
+        const previousStagesDuration = state.stages.slice(0, index).reduce((sum, s) => sum + s.duration, 0)
+        return new Date(state.startTime!.getTime() + previousStagesDuration * 60_000)
+    });
+
+    const stages = state.stages.map((stage, index) => {
         return {
             ...stage,
-            plannedStartTime: plannedStartTime,
-            displayedStartTime: plannedStartTime
+            displayedStartTime: newPlannedStartTimes[index]
         }
     });
 
-    const plannedEndTime = stages.at(-1)!.plannedStartTime.getTime() + stages.at(-1)!.duration * 60_000;
+    const plannedEndTime = newPlannedStartTimes[newPlannedStartTimes.length - 1]?.getTime() + stages[stages.length - 1].duration * 60_000;
 
     return {
         ...state,
         stages: stages,
+        plannedStartTimes: newPlannedStartTimes,
         bufferPlannedLength: state.endTime ? (state.endTime.getTime() - plannedEndTime) / 1000 : null
     }
 }
@@ -59,7 +72,7 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
                 Math.max(
                     now.getTime(),
                     calculatedStartTime.getTime(),
-                    stage.plannedStartTime ? stage.plannedStartTime.getTime() : calculatedStartTime.getTime()
+                    state.plannedStartTimes[i] && state.plannedStartTimes[i] !== null ? state.plannedStartTimes[i].getTime() : calculatedStartTime.getTime()
                 )
             );
             calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60_000);
@@ -74,7 +87,7 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
         }
     }
 
-    const calculatedEndTime = stages.at(-1)!.displayedStartTime!.getTime() + stages.at(-1)!.duration * 60_000;
+    const calculatedEndTime = stages.at(-1)!.displayedStartTime!.getTime() + stages[stages.length - 1].duration * 60_000;
 
     return {
         ...state,

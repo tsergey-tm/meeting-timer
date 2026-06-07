@@ -3,7 +3,6 @@ import {createContext} from "react";
 export type Stage = {
     name: string
     duration: number // in minutes
-    plannedStartTime: Date | null
     actualStartTime: Date | null
     actualEndTime: Date | null
     displayedStartTime: Date | null
@@ -12,7 +11,8 @@ export type Stage = {
 export type MeetingState = {
     startTime: Date | null
     endTime: Date | null
-    stages: Stage[]
+    stages: Array<Stage>
+    plannedStartTimes: Array<Date>
     bufferPlannedLength: number | null
     bufferLength: number | null
     currentStageIndex: number
@@ -47,6 +47,7 @@ export const initialState: MeetingState = {
     startTime: null,
     endTime: null,
     stages: [],
+    plannedStartTimes: [],
     bufferPlannedLength: null,
     bufferLength: null,
     currentStageIndex: -1,

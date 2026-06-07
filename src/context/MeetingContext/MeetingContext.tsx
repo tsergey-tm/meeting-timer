@@ -61,7 +61,6 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
             stages.push({
                 name: decodeURIComponent(nameValue),
                 duration: duration,
-                plannedStartTime: null,
                 actualStartTime: null,
                 actualEndTime: null,
                 displayedStartTime: null
@@ -76,6 +75,7 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
         startTime: startTime,
         endTime: endTime,
         stages: stages,
+        plannedStartTimes: [],
         currentStageIndex: -1,
         meetingStatus: 'not_started',
         lastUpdateTime: null,
@@ -171,8 +171,10 @@ export const MeetingProvider = ({children}: { children: ReactNode }) => {
         // Calculate stage time remaining
         let stageRemaining = totalRemaining;
         if (state.currentStageIndex < state.stages.length - 1) {
-            const nextStage = state.stages[state.currentStageIndex + 1];
-            stageRemaining = (nextStage.plannedStartTime!.getTime() - now.getTime()) / 1000;
+            const nextStagePlannedStartTime = state.plannedStartTimes[state.currentStageIndex + 1];
+            if (nextStagePlannedStartTime) {
+                stageRemaining = (nextStagePlannedStartTime.getTime() - now.getTime()) / 1000;
+            }
         }
 
         return {stageRemaining, totalRemaining}

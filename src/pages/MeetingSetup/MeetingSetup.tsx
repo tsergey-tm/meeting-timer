@@ -46,7 +46,7 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
         }
     }
 
-    const handleAddStage = (e: React.SubmitEvent) => {
+    const handleAddStage = (e: React.FormEvent) => {
         e.preventDefault()
         if (newStageName.trim() === '' || newStageDuration === '') return
 
@@ -60,7 +60,6 @@ const MeetingSetup: React.FC<MeetingSetupProps> = ({onClose}) => {
                 duration: duration,
                 actualEndTime: null,
                 actualStartTime: null,
-                plannedStartTime: null,
                 displayedStartTime: null
             }
         })

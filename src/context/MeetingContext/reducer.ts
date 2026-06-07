@@ -27,6 +27,7 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
             return calculatePlannedStageTimes({
                 ...state,
                 stages: [...state.stages, action.payload],
+                plannedStartTimes: [],
                 meetingStatus: 'not_started',
                 currentStageIndex: -1
             })
@@ -52,6 +53,7 @@ export function reducer(state: MeetingState, action: Action): MeetingState {
             return {
                 ...state,
                 stages: state.stages.filter((_, index) => index !== action.payload),
+                plannedStartTimes: state.plannedStartTimes.filter((_, index) => index !== action.payload),
                 meetingStatus: 'not_started',
                 currentStageIndex: -1
             }
