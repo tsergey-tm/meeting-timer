@@ -17,7 +17,7 @@ const StageList = () => {
             <div className="space-y-3">
                 {state.stages.map((stage, index) => {
                     const isCurrent = index === state.currentStageIndex
-                    const isCompleted = stage.actualEndTime !== null
+                    const isCompleted = state.actualEndTimes[index] !== null
                     // Simplified logic since plannedStartTime is not available in current context
                     const isDelayed = false
 
@@ -53,10 +53,10 @@ const StageList = () => {
                                 </div>
                             </div>
                             <div className="flex items-end space-y-1 flex-col self-stretch">
-                                {stage.displayedStartTime && (
+                                {state.displayedStartTime && state.displayedStartTime[index] && (
                                     <div
                                         className={`text-sm font-medium text-right ${isDelayed ? 'text-orange-600' : 'text-gray-600'}`}>
-                                        {format(stage.displayedStartTime, 'HH:mm')}
+                                        {format(state.displayedStartTime[index], 'HH:mm')}
                                     </div>
                                 )}
                                 {isCurrent && !isCompleted && (

@@ -19,12 +19,17 @@ export const calculatePlannedStageTimes = (state: MeetingState): MeetingState =>
         return new Date(state.startTime!.getTime() + previousStagesDuration * 60_000)
     });
 
-    const stages = state.stages.map((stage, index) => {
+    const stages = state.stages.map((stage) => {
         return {
-            ...stage,
-            displayedStartTime: newPlannedStartTimes[index]
+            ...stage
         }
     });
+
+    // Set displayedStartTime in the MeetingState array
+    const displayedStartTime = new Array<Date | null>(state.stages.length);
+    for (let i = 0; i < state.stages.length; i++) {
+        displayedStartTime[i] = newPlannedStartTimes[i];
+    }
 
     const plannedEndTime = newPlannedStartTimes[newPlannedStartTimes.length - 1]?.getTime() + stages[stages.length - 1].duration * 60_000;
 
@@ -32,6 +37,7 @@ export const calculatePlannedStageTimes = (state: MeetingState): MeetingState =>
         ...state,
         stages: stages,
         plannedStartTimes: newPlannedStartTimes,
+        displayedStartTime: displayedStartTime,
         bufferPlannedLength: state.endTime ? (state.endTime.getTime() - plannedEndTime) / 1000 : null
     }
 }
@@ -65,23 +71,26 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
     }
 
 
+    // Initialize displayedStartTime array if not exists
+    const displayedStartTime = state.displayedStartTime ? [...state.displayedStartTime] : new Array<Date | null>(state.stages.length);
+
     for (let i = 0; i < stages.length; i++) {
         const stage = stages[i];
         // Check if this stage has an actual start time in the array
         const actualStartTime = (state.actualStartTimes && state.actualStartTimes[i]) || null;
         if (actualStartTime === null) {
             // Stage not started: use calculated start time
-            stage.displayedStartTime = new Date(
+            displayedStartTime[i] = new Date(
                 Math.max(
                     now.getTime(),
                     calculatedStartTime.getTime(),
                     (state.plannedStartTimes && state.plannedStartTimes[i] && state.plannedStartTimes[i] !== null) ? state.plannedStartTimes[i].getTime() : calculatedStartTime.getTime()
                 )
             );
-            calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60_000);
+            calculatedStartTime = new Date(displayedStartTime[i]!.getTime() + stage.duration * 60_000);
         } else {
             // Stage started: overwrite calculated start time by actual start time
-            stage.displayedStartTime = actualStartTime;
+            displayedStartTime[i] = actualStartTime;
             /*if (stage.actualEndTimes === null) {
                 calculatedStartTime = new Date(actualStartTime.getTime() + stage.duration * 60_000);
             } else {
@@ -90,11 +99,12 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
         }
     }
 
-    const calculatedEndTime = stages.at(-1)!.displayedStartTime!.getTime() + stages[stages.length - 1].duration * 60_000;
+    const calculatedEndTime = displayedStartTime[displayedStartTime.length - 1]!.getTime() + stages[stages.length - 1].duration * 60_000;
 
     return {
         ...state,
         stages: stages,
+        displayedStartTime: displayedStartTime,
         bufferLength: state.endTime ? (state.endTime.getTime() - calculatedEndTime) / 1000 : null
     }
 }

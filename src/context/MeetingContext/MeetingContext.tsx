@@ -60,8 +60,7 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
         if (!isNaN(duration) && duration > 0) {
             stages.push({
                 name: decodeURIComponent(nameValue),
-                duration: duration,
-                displayedStartTime: null
+                duration: duration
             })
         }
 
@@ -76,6 +75,7 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
         plannedStartTimes: [],
         actualStartTimes: [],
         actualEndTimes: [],
+        displayedStartTime: [],
         currentStageIndex: -1,
         meetingStatus: 'not_started',
         lastUpdateTime: null,

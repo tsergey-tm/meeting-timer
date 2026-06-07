@@ -59,8 +59,9 @@ export const reducer = (state: MeetingState, action: Action): MeetingState => {
 
         case 'MARK_STAGE_COMPLETED': {
             const newState = {...state}
-            newState.actualEndTimes[newState.currentStageIndex] = now
-            const newCurrentStageIndex = action.payload + 1
+            newState.actualEndTimes[newState.currentStageIndex] = now;
+            const newCurrentStageIndex = action.payload + 1;
+
             if (newCurrentStageIndex < newState.stages.length) {
                 // Update actualStartTimes array for the next stage
                 const newActualStartTimes = [...newState.actualStartTimes];
