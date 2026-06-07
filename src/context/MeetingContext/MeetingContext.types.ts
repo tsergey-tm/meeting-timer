@@ -1,4 +1,4 @@
-import {type Stage} from "../../utils/stageUtils.ts";
+import {type Stage} from "./stageUtils.ts";
 import {createContext} from "react";
 
 export type MeetingState = {

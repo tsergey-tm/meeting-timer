@@ -1,4 +1,4 @@
-import type {MeetingState} from "../context/MeetingContext/MeetingContext.types.ts";
+import type {MeetingState} from "./MeetingContext.types.ts";
 
 export type Stage = {
     name: string

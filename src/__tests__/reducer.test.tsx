@@ -315,7 +315,9 @@ describe('Meeting Reducer', () => {
                 ],
                 currentStageIndex: -1,
                 meetingStatus: 'not_started',
-                lastUpdateTime: null
+                lastUpdateTime: null,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const action: Action = {type: 'RESET_STATE', payload: newState}

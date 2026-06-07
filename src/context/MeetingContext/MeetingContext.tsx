@@ -1,6 +1,6 @@
 import {type ReactNode, useEffect, useReducer, useRef} from 'react'
 import {differenceInMinutes, format, isBefore} from 'date-fns'
-import {type Stage} from '../../utils/stageUtils.ts'
+import {type Stage} from './stageUtils.ts'
 import {initialState, MeetingContext, type MeetingState} from "./MeetingContext.types.ts";
 import {reducer} from "./reducer.ts";
 import {useTranslation} from "react-i18next";

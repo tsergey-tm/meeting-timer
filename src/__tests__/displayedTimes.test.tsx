@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest'
-import {calculateDisplayedStageTimes} from '../utils/stageUtils.ts'
+import {calculateDisplayedStageTimes} from '../context/MeetingContext/stageUtils.ts'
 import type {MeetingState} from "../context/MeetingContext/MeetingContext.types.ts";
 
 describe('calculateDisplayedStageTimes function', () => {
@@ -22,7 +22,9 @@ describe('calculateDisplayedStageTimes function', () => {
             stages: [],
             currentStageIndex: -1,
             meetingStatus: 'not_started',
-            lastUpdateTime: null
+            lastUpdateTime: null,
+            bufferLength: null,
+            bufferPlannedLength: null
         }
 
         const result = calculateDisplayedStageTimes(state)
@@ -54,7 +56,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: -1,
                 meetingStatus: 'not_started',
-                lastUpdateTime: null
+                lastUpdateTime: null,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -89,7 +93,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: -1,
                 meetingStatus: 'not_started',
-                lastUpdateTime: null
+                lastUpdateTime: null,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -125,7 +131,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: 0,
                 meetingStatus: 'in_progress',
-                lastUpdateTime: actualStartTime
+                lastUpdateTime: actualStartTime,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -161,7 +169,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: 1,
                 meetingStatus: 'in_progress',
-                lastUpdateTime: actualEndTime
+                lastUpdateTime: actualEndTime,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -201,7 +211,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: 2,
                 meetingStatus: 'completed',
-                lastUpdateTime: end2
+                lastUpdateTime: end2,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -230,7 +242,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: -1,
                 meetingStatus: 'not_started',
-                lastUpdateTime: null
+                lastUpdateTime: null,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -246,7 +260,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 stages: [],
                 currentStageIndex: -1,
                 meetingStatus: 'not_started',
-                lastUpdateTime: null
+                lastUpdateTime: null,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)
@@ -278,7 +294,9 @@ describe('calculateDisplayedStageTimes function', () => {
                 ],
                 currentStageIndex: -1,
                 meetingStatus: 'not_started',
-                lastUpdateTime: null
+                lastUpdateTime: null,
+                bufferLength: null,
+                bufferPlannedLength: null
             }
 
             const result = calculateDisplayedStageTimes(state)

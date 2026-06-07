@@ -1,4 +1,4 @@
-import {calculateDisplayedStageTimes, calculatePlannedStageTimes} from "../../utils/stageUtils.ts";
+import {calculateDisplayedStageTimes, calculatePlannedStageTimes} from "./stageUtils.ts";
 import type {Action, MeetingState} from "./MeetingContext.types.ts";
 
 export function reducer(state: MeetingState, action: Action): MeetingState {

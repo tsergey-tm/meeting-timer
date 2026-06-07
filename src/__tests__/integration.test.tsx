@@ -16,7 +16,7 @@ describe('Meeting Integration Tests', () => {
         // Mock notification permission
         const originalNotification = window.Notification
         if (originalNotification) {
-            ;(window as { Notification?: typeof Notification }).Notification = {
+            (window as { Notification?: typeof Notification }).Notification = {
                 permission: 'granted',
                 requestPermission: vi.fn().mockResolvedValue('granted')
             }
