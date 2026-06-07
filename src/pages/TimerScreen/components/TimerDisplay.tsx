@@ -2,11 +2,15 @@ import {format} from 'date-fns'
 import {ClockIcon} from '@radix-ui/react-icons'
 import {formatTime} from '../../../utils/timeFormatting.ts'
 import {useTranslation} from 'react-i18next';
+import {TimeBufferBar, type TimeBufferBarProps} from "../../../components/TimeBufferBar.tsx";
+import {useState} from "react";
 
 interface TimerDisplayProps {
     stageRemaining: number
     totalRemaining: number
     meetingStatus: string
+    bufferPlannedLength: number
+    bufferLength: number
     startMeeting: () => void
     isValid: boolean
 }
@@ -15,10 +19,21 @@ const TimerDisplay = ({
                           stageRemaining,
                           totalRemaining,
                           meetingStatus,
+                          bufferPlannedLength,
+                          bufferLength,
                           startMeeting,
                           isValid
                       }: TimerDisplayProps) => {
     const {t} = useTranslation();
+
+
+    // TimeBufferBar state
+    const [bufferParams] = useState<TimeBufferBarProps>({
+        currentSeconds: bufferLength,
+        totalBuffer: bufferPlannedLength,
+        yellowAt: bufferPlannedLength * 2 / 3,
+        orangeAt: bufferPlannedLength / 3
+    });
 
     return (
         <div className="space-y-6">
@@ -61,6 +76,12 @@ const TimerDisplay = ({
                         {formatTime(totalRemaining)}
                     </div>
                 </div>
+                <TimeBufferBar
+                    currentSeconds={bufferParams.currentSeconds}
+                    totalBuffer={bufferParams.totalBuffer}
+                    yellowAt={bufferParams.yellowAt}
+                    orangeAt={bufferParams.orangeAt}
+                />
             </div>
 
             <div className="flex justify-center space-x-4">

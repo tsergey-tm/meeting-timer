@@ -75,7 +75,7 @@ const TimerScreen = () => {
                 if (permission === 'denied') {
                     setIsNotificationSelected(false)
                     if (mode === 'both') {
-                        alert('Уведомления заблокированы в настройках браузера. Используется только звук.');
+                        alert(t('notification.alerts.notificationForbidden'));
                     }
                 }
             } else {
@@ -139,7 +139,7 @@ const TimerScreen = () => {
             console.log("notifyOneMinute");
             if ('Notification' in window && window.Notification.permission === 'granted') {
                 new Notification(t('app.title'), {
-                    body: 'One minute left until the meeting stage changes',
+                    body: t('notification.alerts.oneMinute'),
                     icon: 'favicon.svg'
                 })
             }
@@ -152,7 +152,7 @@ const TimerScreen = () => {
 
         if (isNotificationSelected && 'Notification' in window && window.Notification.permission === 'granted') {
             new Notification(t('app.title'), {
-                body: "It's time to change the stage of the meeting",
+                body: t('notification.alerts.time'),
                 icon: 'favicon.svg'
             })
         }
@@ -228,18 +228,18 @@ const TimerScreen = () => {
                                 <AppIcon className="h-8 w-8 text-blue-600 mr-3"/>
                                 <h1 className="text-2xl font-bold text-gray-900">{t('app.title')}</h1>
                             </div>
-                            <div className="flex space-x-2">
+                            <div className="flex gap-2 flex-wrap">
                                 <LanguageSwitcher/>
                                 <button
                                     onClick={() => setIsHelpModalOpen(true)}
-                                    className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
+                                    className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full transition-colors"
                                     aria-label="Help"
                                 >
                                     <QuestionMarkCircledIcon className="h-6 w-6"/>
                                 </button>
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
+                                    className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full transition-colors"
                                     aria-label="Configure meeting"
                                 >
                                     <Pencil2Icon className="h-6 w-6"/>
@@ -252,6 +252,8 @@ const TimerScreen = () => {
                                 stageRemaining={stageRemaining}
                                 totalRemaining={totalRemaining}
                                 meetingStatus={state.meetingStatus}
+                                bufferPlannedLength={state.bufferPlannedLength || 0}
+                                bufferLength={state.bufferLength || 0}
                                 startMeeting={startMeeting}
                                 isValid={isValid}
                             />

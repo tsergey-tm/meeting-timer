@@ -9,24 +9,32 @@ export type Stage = {
     displayedStartTime: Date | null
 }
 
-export const calculatePlannedStageTimes = (stages: Stage[], startTime: Date): Stage[] => {
-    if (!startTime) return stages
+export const calculatePlannedStageTimes = (state: MeetingState): MeetingState => {
+    if (state.startTime === null || state.stages.length < 1) return state
 
-    return stages.map((stage, index) => {
-        const previousStagesDuration = stages.slice(0, index).reduce((sum, s) => sum + s.duration, 0)
-        const plannedStartTime = new Date(startTime.getTime() + previousStagesDuration * 60000)
+    const stages = state.stages.map((stage, index) => {
+        const previousStagesDuration = state.stages.slice(0, index).reduce((sum, s) => sum + s.duration, 0)
+        const plannedStartTime = new Date(state.startTime!.getTime() + previousStagesDuration * 60_000)
 
         return {
             ...stage,
             plannedStartTime: plannedStartTime,
             displayedStartTime: plannedStartTime
         }
-    })
+    });
+
+    const plannedEndTime = stages.at(-1)!.plannedStartTime.getTime() + stages.at(-1)!.duration * 60_000;
+
+    return {
+        ...state,
+        stages: stages,
+        bufferPlannedLength: state.endTime ? (state.endTime.getTime() - plannedEndTime) / 1000 : null
+    }
 }
 
 export function calculateDisplayedStageTimes(state: MeetingState): MeetingState {
 
-    if (state.startTime === null) {
+    if (state.startTime === null || state.stages.length < 1) {
         return state;
     }
 
@@ -63,18 +71,24 @@ export function calculateDisplayedStageTimes(state: MeetingState): MeetingState 
                     stage.plannedStartTime ? stage.plannedStartTime.getTime() : calculatedStartTime.getTime()
                 )
             );
-            calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60000);
+            calculatedStartTime = new Date(stage.displayedStartTime.getTime() + stage.duration * 60_000);
         } else {
             // Stage started: overwrite calculated start time by actual start time
             stage.displayedStartTime = stage.actualStartTime;
             if (stage.actualEndTime === null) {
-                calculatedStartTime = new Date(stage.actualStartTime.getTime() + stage.duration * 60000);
+                calculatedStartTime = new Date(stage.actualStartTime.getTime() + stage.duration * 60_000);
             } else {
                 calculatedStartTime = stage.actualEndTime;
             }
         }
     }
 
-    return {...state, stages: stages};
+    const calculatedEndTime = stages.at(-1)!.displayedStartTime!.getTime() + stages.at(-1)!.duration * 60_000;
+
+    return {
+        ...state,
+        stages: stages,
+        bufferLength: state.endTime ? (state.endTime.getTime() - calculatedEndTime) / 1000 : null
+    }
 }
 

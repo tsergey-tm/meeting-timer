@@ -5,6 +5,8 @@ export type MeetingState = {
     startTime: Date | null
     endTime: Date | null
     stages: Stage[]
+    bufferPlannedLength: number | null
+    bufferLength: number | null
     currentStageIndex: number
     meetingStatus: 'not_started' | 'in_progress' | 'completed'
     lastUpdateTime: Date | null
@@ -37,6 +39,8 @@ export const initialState: MeetingState = {
     startTime: null,
     endTime: null,
     stages: [],
+    bufferPlannedLength: null,
+    bufferLength: null,
     currentStageIndex: -1,
     meetingStatus: 'not_started',
     lastUpdateTime: null,

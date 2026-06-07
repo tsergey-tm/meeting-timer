@@ -36,6 +36,11 @@
                 "notificationsOnly": "Notifications only",
                 "soundOnly": "Sound only",
                 "noNotifications": "No notifications"
+            },
+            "alerts": {
+                "oneMinute": "One minute left until the meeting stage changes",
+                "time": "It's time to change the stage of the meeting",
+                "notificationForbidden": "Notifications are blocked in the browser. Only sound is used."
             }
         },
         "meeting": {
@@ -84,6 +89,9 @@
             "endTimeBeforeStartTime": "Meeting end time must be after start time",
             "oneStageRequired": "At least one stage is required",
             "positive": "All stage durations must be positive numbers"
+        },
+        "TimeBufferBar": {
+            "buffer": "Buffer"
         }
     }
 }

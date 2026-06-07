@@ -13,10 +13,10 @@ const LanguageSwitcher: React.FC = () => {
     };
 
     return (
-        <div>
+        <>
             <button
                 onClick={() => setIsModalOpen(true)}
-                className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full p-2 transition-colors"
+                className="text-gray-600 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded-full transition-colors"
                 aria-label="Select language"
             >
                 <GlobeIcon className="h-6 w-6"/>
@@ -80,7 +80,7 @@ const LanguageSwitcher: React.FC = () => {
                     </button>
                 </div>
             </Modal>
-        </div>
+        </>
     );
 };
 
