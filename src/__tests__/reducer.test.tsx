@@ -16,17 +16,14 @@ describe('Meeting Reducer', () => {
                 {
                     name: 'Introduction',
                     durationMins: 15,
-                    displayedStartTime: null
                 },
                 {
                     name: 'Discussion',
                     durationMins: 30,
-                    displayedStartTime: null
                 },
                 {
                     name: 'Wrap-up',
                     durationMins: 15,
-                    displayedStartTime: null
                 }
             ]
         }
@@ -214,9 +211,9 @@ describe('Meeting Reducer', () => {
             const action: Action = {type: 'MARK_STAGE_COMPLETED', payload: 0}
             const result = reducer(inProgressState, action)
 
-            expect(result.stages[0].actualEndTime).toBeDefined()
+            expect(result.actualEndTimes[0]).toBeDefined()
             // For the test we just want to verify it's set, not necessarily to be <= now
-            expect(result.stages[0].actualEndTime!.getTime()).toBeGreaterThan(0)
+            expect(result.actualEndTimes[0]!.getTime()).toBeGreaterThan(0)
             expect(result.currentStageIndex).toBe(1)
             expect(result.meetingStatus).toBe('in_progress')
         })
@@ -236,7 +233,7 @@ describe('Meeting Reducer', () => {
             const action: Action = {type: 'MARK_STAGE_COMPLETED', payload: 1}
             const result = reducer(inProgressState, action)
 
-            expect(result.stages[1].actualEndTime).toBeDefined()
+            expect(result.actualEndTimes[1]).toBeDefined()
             expect(result.currentStageIndex).toBe(2)
             // For a 3-stage meeting [0,1,2], when we mark stage 1 complete and advance to stage 2,
             // since there are only 3 stages (0,1,2), the condition newCurrentStageIndex >= stages.length
@@ -281,9 +278,9 @@ describe('Meeting Reducer', () => {
             const action: Action = {type: 'UPDATE_STAGES_DISPLAYED_TIMES', payload: inProgressState.stages}
             const result = reducer(inProgressState, action)
 
-            expect(result.stages[0].displayedStartTime).toBeDefined()
-            expect(result.stages[1].displayedStartTime).toBeDefined()
-            expect(result.stages[2].displayedStartTime).toBeDefined()
+            expect(result.displayedStartTime[0]).toBeDefined()
+            expect(result.displayedStartTime[1]).toBeDefined()
+            expect(result.displayedStartTime[2]).toBeDefined()
         })
     })
 
@@ -296,7 +293,6 @@ describe('Meeting Reducer', () => {
                     {
                         name: 'Welcome',
                         durationMins: 10,
-                        displayedStartTime: null
                     }
                 ],
                 currentStageIndex: -1,
