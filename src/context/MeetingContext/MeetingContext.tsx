@@ -79,7 +79,9 @@ const makeStateFromHash = (hash: string): MeetingState | undefined => {
         stages: stages,
         currentStageIndex: -1,
         meetingStatus: 'not_started',
-        lastUpdateTime: null
+        lastUpdateTime: null,
+        bufferPlannedLength: null,
+        bufferLength: null
     };
 }
 
