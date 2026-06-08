@@ -208,9 +208,9 @@ const TimerScreen = () => {
                 />
             )}
 
-            <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-6">
-                <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div className="p-6">
+            <div className="h-screen overflow-hidden bg-linear-to-br from-blue-50 to-indigo-100 p-6">
+                <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">
+                    <div className="p-6 h-full flex flex-col min-h-0">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center">
                                 <AppIcon className="h-8 w-8 text-blue-600 mr-3"/>
@@ -235,7 +235,7 @@ const TimerScreen = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-6">
+                        <div className="space-y-6 flex-1 flex flex-col min-h-0">
                             <TimerDisplay/>
                             <StageList/>
                         </div>

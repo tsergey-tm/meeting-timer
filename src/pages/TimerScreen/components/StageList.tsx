@@ -24,9 +24,9 @@ const StageList = () => {
     }
 
     return (
-        <div className="border-t pt-6">
+        <div className="border-t pt-6 flex-1 flex flex-col min-h-0">
             <h2 className="text-lg font-medium text-gray-900 mb-4">{t('meeting.stages.title')}</h2>
-            <div className="space-y-3">
+            <div className="space-y-3 flex-1 overflow-y-auto">
                 {state.stages.map((stage, index) => {
                     const isCurrent = index === state.currentStageIndex
                     const isCompleted = state.actualEndTimes[index]
