@@ -72,6 +72,7 @@
             "stages": "Meeting Stages",
             "timesShort": "Total stage time: {{totalStageDuration}} min",
             "timesFull": "Total stage time: {{totalStageDuration}} min, meeting: {{meetingDuration}} min, free time: {{freeTime}}",
+            "buffer": "Don't over-expand each stage. It's better to leave some extra time at the end of the meeting. The program will tell you whether it's safe to linger at each stage.",
             "exceeds": "⚠ Total stage time exceeds meeting duration by {{exceeds}} minutes",
             "stage": {
                 "duration": "{{durationMins}} min",
