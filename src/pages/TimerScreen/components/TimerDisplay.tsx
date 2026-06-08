@@ -3,48 +3,71 @@ import {ClockIcon} from '@radix-ui/react-icons'
 import {formatTime} from '../../../utils/timeUtils.ts'
 import {useTranslation} from 'react-i18next';
 import {TimeBufferBar, type TimeBufferBarProps} from "../../../components/TimeBufferBar.tsx";
-import {useState} from "react";
+import {useMeeting} from "../../../context/MeetingContext/useMeeting.ts";
+import {clamp} from "../../../utils/numUtils.ts";
 
-interface TimerDisplayProps {
-    stageRemaining: number
-    totalRemaining: number
-    meetingStatus: string
-    bufferPlannedLength: number
-    bufferLength: number
-    startMeeting: () => void
-    isValid: boolean
-}
 
-const TimerDisplay = ({
-                          stageRemaining,
-                          totalRemaining,
-                          meetingStatus,
-                          bufferPlannedLength,
-                          bufferLength,
-                          startMeeting,
-                          isValid
-                      }: TimerDisplayProps) => {
+const TimerDisplay = () => {
     const {t} = useTranslation();
+    // Meeting context and utilities
+    const {state, dispatch, calculateTimeRemaining, validateMeeting} = useMeeting();
 
+    const meetingStatus = state.meetingStatus;
+    const {isValid} = validateMeeting();
+    const {stageRemaining, totalRemaining} = calculateTimeRemaining();
+
+    const startMeeting = () => {
+        dispatch({type: 'START_MEETING'})
+    }
 
     // TimeBufferBar state
-    const [bufferParams] = useState<TimeBufferBarProps>({
-        currentSeconds: bufferLength,
-        totalBuffer: bufferPlannedLength,
-        yellowAt: bufferPlannedLength * 2 / 3,
-        orangeAt: bufferPlannedLength / 3
-    });
+    const calcBufferParams = (): TimeBufferBarProps => {
+
+        const bufferPlannedLength = state.bufferPlannedLength || 0
+
+        // Buffer empty or not valid
+        if (bufferPlannedLength <= 0 || !isValid) {
+            return {
+                bufferBalanceSeconds: 0,
+                totalBufferSeconds: 0,
+                yellowAt: 0,
+                orangeAt: 0
+            }
+        }
+
+        const yellowA = -0.5; // (0.5 - 1) / (1 - 0)
+        const yellowB = 1;
+        const orangeA = -0.5; // (0 - 0.5) / (1 - 0)
+        const orangeB = 0.5;
+
+        const meetingConsuption = clamp(
+            (new Date().getTime() - state.startTime!.getTime()) / (state.endTime!.getTime() - state.startTime!.getTime()),
+            0, 1
+        );
+
+        const yellowK = yellowA * meetingConsuption + yellowB;
+        const orangeK = orangeA * meetingConsuption + orangeB;
+
+        return {
+            bufferBalanceSeconds: state.bufferLength || 0,
+            totalBufferSeconds: bufferPlannedLength,
+            yellowAt: yellowK * bufferPlannedLength,
+            orangeAt: orangeK * bufferPlannedLength
+        }
+    };
+
 
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-6">
-                <div className="text-center p-4 bg-lime-50 rounded-lg">
+            <div className="grid grid-cols-12 gap-4 w-full">
+                <div
+                    className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 text-center p-4 bg-lime-50 rounded-lg">
                     <div className="text-sm text-gray-600 mb-2">{t('timer.current.caption')}</div>
                     <div className="text-2xl font-bold text-gray-900">
                         {format(new Date(), 'HH:mm:ss')}
                     </div>
                 </div>
-                <div className={"text-center p-4 rounded-lg " + (
+                <div className={"col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 text-center p-4 rounded-lg " + (
                     stageRemaining < 1 ? 'bg-red-50' :
                         stageRemaining < 61 ? 'bg-yellow-50' :
                             'bg-blue-50'
@@ -60,7 +83,7 @@ const TimerDisplay = ({
                         {formatTime(stageRemaining)}
                     </div>
                 </div>
-                <div className={"text-center p-4 rounded-lg " + (
+                <div className={"col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 text-center p-4 rounded-lg " + (
                     totalRemaining < 1 ? 'bg-red-50' :
                         totalRemaining < 61 ? 'bg-yellow-50' :
                             'bg-green-50'
@@ -76,12 +99,9 @@ const TimerDisplay = ({
                         {formatTime(totalRemaining)}
                     </div>
                 </div>
-                <TimeBufferBar
-                    currentSeconds={bufferParams.currentSeconds}
-                    totalBuffer={bufferParams.totalBuffer}
-                    yellowAt={bufferParams.yellowAt}
-                    orangeAt={bufferParams.orangeAt}
-                />
+                <div className={"col-span-12 sm:col-span-6 md:col-span-12 lg:col-span-3 "}>
+                    <TimeBufferBar {...calcBufferParams()}/>
+                </div>
             </div>
 
             <div className="flex justify-center space-x-4">

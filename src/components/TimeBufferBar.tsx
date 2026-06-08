@@ -3,41 +3,41 @@ import {formatTimeToMinutes} from "../utils/timeUtils.ts";
 import {useTranslation} from "react-i18next";
 
 export interface TimeBufferBarProps {
-    currentSeconds: number; // Текущий остаток времени в буфере (может быть < 0)
-    totalBuffer: number;    // Максимальный (полный) объем буфера в секундах
+    bufferBalanceSeconds: number; // Текущий остаток времени в буфере (может быть < 0)
+    totalBufferSeconds: number;    // Максимальный (полный) объем буфера в секундах
     yellowAt: number;       // Порог желтой зоны в секундах (например, 2400)
     orangeAt: number;       // Порог оранжевой зоны в секундах (например, 1200)
 }
 
 export const TimeBufferBar: React.FC<TimeBufferBarProps> = ({
-                                                                currentSeconds,
-                                                                totalBuffer,
+                                                                bufferBalanceSeconds,
+                                                                totalBufferSeconds,
                                                                 yellowAt,
                                                                 orangeAt
                                                             }) => {
     const {t} = useTranslation();
 
     // 1. Динамический минимум оставшегося времени (если ушли в просрочку, он падает ниже нуля)
-    const displayMin = Math.min(0, currentSeconds);
+    const displayMin = Math.min(0, bufferBalanceSeconds);
 
     // Полный временной диапазон шкалы на экране
-    const totalScaleRange = totalBuffer - displayMin;
+    const totalScaleRange = totalBufferSeconds - displayMin;
 
     // 2. Вычисляем ширину зон слева направо (от "целого буфера" к "сгоревшему")
-    const greenWidth = ((totalBuffer - yellowAt) / totalScaleRange) * 100;
+    const greenWidth = ((totalBufferSeconds - yellowAt) / totalScaleRange) * 100;
     const yellowWidth = ((yellowAt - orangeAt) / totalScaleRange) * 100;
     const orangeWidth = (orangeAt / totalScaleRange) * 100;
 
     // 3. Вычисляем позицию указателя сжигания (0% - слева, 100% - справа)
     // Формула считает, сколько секунд из буфера мы уже "сожгли"
-    const burnedSeconds = totalBuffer - currentSeconds;
+    const burnedSeconds = totalBufferSeconds - bufferBalanceSeconds;
     const pointerPosition = Math.min(
         Math.max(0, (burnedSeconds / totalScaleRange) * 100),
         100
     );
 
-    const isOverdue = currentSeconds < 0; // Буфер полностью сгорел, ушли в минус
-    const isUntouched = currentSeconds >= totalBuffer; // Буфер не тронут (или даже увеличен)
+    const isOverdue = bufferBalanceSeconds < 0; // Буфер полностью сгорел, ушли в минус
+    const isUntouched = bufferBalanceSeconds >= totalBufferSeconds; // Буфер не тронут (или даже увеличен)
 
     return (
         <div
@@ -62,7 +62,7 @@ export const TimeBufferBar: React.FC<TimeBufferBarProps> = ({
                         className={`px-2 py-0.5 text-xs font-bold rounded shadow-sm text-white mb-1 transition-colors duration-300 ${
                             isOverdue ? 'bg-rose-600 shadow-[0_0_8px_rgba(225,29,72,0.4)]' : isUntouched ? 'bg-emerald-600' : 'bg-slate-800'
                         }`}>
-                        {formatTimeToMinutes(currentSeconds)}
+                        {formatTimeToMinutes(bufferBalanceSeconds)}
                     </div>
                 </div>
 

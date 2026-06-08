@@ -44,11 +44,6 @@ const TimerScreen = () => {
         resetPlayedSounds();
     }
 
-    const startMeeting = () => {
-        resetPlayedSounds();
-        dispatch({type: 'START_MEETING'})
-    }
-
     const initializeAudioContext = () => {
         if (!isAudioReady && !audioContextRef.current) {
             try {
@@ -189,8 +184,6 @@ const TimerScreen = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.meetingStatus, time, isAudioReady, isNotificationSelected, warnNotified, errorNotified])
 
-    const {stageRemaining, totalRemaining} = calculateTimeRemaining()
-
     // Cleanup on unmount
     useEffect(() => {
         return () => {
@@ -243,15 +236,7 @@ const TimerScreen = () => {
                         </div>
 
                         <div className="space-y-6">
-                            <TimerDisplay
-                                stageRemaining={stageRemaining}
-                                totalRemaining={totalRemaining}
-                                meetingStatus={state.meetingStatus}
-                                bufferPlannedLength={state.bufferPlannedLength || 0}
-                                bufferLength={state.bufferLength || 0}
-                                startMeeting={startMeeting}
-                                isValid={isValid}
-                            />
+                            <TimerDisplay/>
                             <StageList/>
                         </div>
                     </div>
