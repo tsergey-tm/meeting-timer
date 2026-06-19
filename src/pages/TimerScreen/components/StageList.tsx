@@ -3,7 +3,7 @@ import {CheckIcon, ClockIcon, TrackNextIcon} from '@radix-ui/react-icons'
 import {useTranslation} from 'react-i18next';
 import {useMeeting} from "../../../context/MeetingContext/useMeeting.ts";
 
-const StageList = (props: { resetNotificationCallback: () => void }) => {
+const StageList = () => {
     const {state, dispatch} = useMeeting();
     const {t} = useTranslation();
 
@@ -21,7 +21,6 @@ const StageList = (props: { resetNotificationCallback: () => void }) => {
 
     const markStageCompleted = (stageIndex: number) => {
         dispatch({type: 'MARK_STAGE_COMPLETED', payload: stageIndex});
-        props.resetNotificationCallback();
     }
 
     return (

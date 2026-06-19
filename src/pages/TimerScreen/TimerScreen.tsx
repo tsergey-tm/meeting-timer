@@ -41,7 +41,7 @@ const TimerScreen = () => {
 
     const setIsModalOpen = (open: boolean) => {
         _setIsModalOpen(open);
-        resetPlayedSounds();
+        resetNotifications();
     }
 
     const initializeAudioContext = () => {
@@ -91,10 +91,11 @@ const TimerScreen = () => {
             setIsAudioReady(false)
         }
 
-        resetPlayedSounds();
+        resetNotifications();
     }
 
-    const resetPlayedSounds = () => {
+    const resetNotifications = () => {
+        console.log("Reset notifications");
         setWarnNotified(false);
         setErrorNotified(false);
     }
@@ -123,6 +124,7 @@ const TimerScreen = () => {
     }
 
     const notifyOneMinute = () => {
+        console.log("notifyOneMinute");
         setWarnNotified(true);
 
         if (isNotificationSelected) {
@@ -137,6 +139,7 @@ const TimerScreen = () => {
     }
 
     const notifyExpired = () => {
+        console.log("notifyExpired");
         setWarnNotified(true);
         setErrorNotified(true);
 
@@ -183,6 +186,10 @@ const TimerScreen = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.meetingStatus, time, isAudioReady, isNotificationSelected, warnNotified, errorNotified])
+
+    useEffect(() => {
+        resetNotifications();
+    }, [state.currentStageIndex, state.stages, state.startTime, state.endTime]);
 
     // Cleanup on unmount
     useEffect(() => {
@@ -237,7 +244,7 @@ const TimerScreen = () => {
 
                         <div className="space-y-6 flex-1 flex flex-col min-h-0">
                             <TimerDisplay/>
-                            <StageList resetNotificationCallback={resetPlayedSounds}/>
+                            <StageList/>
                         </div>
                     </div>
                 </div>
