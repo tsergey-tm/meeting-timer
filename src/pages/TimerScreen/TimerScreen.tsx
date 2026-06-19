@@ -237,7 +237,7 @@ const TimerScreen = () => {
 
                         <div className="space-y-6 flex-1 flex flex-col min-h-0">
                             <TimerDisplay/>
-                            <StageList/>
+                            <StageList resetNotificationCallback={resetPlayedSounds}/>
                         </div>
                     </div>
                 </div>
